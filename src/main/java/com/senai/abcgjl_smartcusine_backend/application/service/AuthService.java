@@ -17,7 +17,7 @@ public class AuthService {
 
     public String login(AuthDTO.LoginRequest req) {
         UsuarioEntity usuario = usuarios.findByEmail(req.email())
-                .orElseThrow(() ->  new UsuarioNaoEncontradoException("Usuário não encontrado"));
+                .orElseThrow(() ->  new UsuarioNaoEncontradoException("Usuário não foi encontrado"));
 
         if (!encoder.matches(req.senha(), usuario.getSenha())) {
             throw new BadCredentialsException("Credenciais inválidas");
