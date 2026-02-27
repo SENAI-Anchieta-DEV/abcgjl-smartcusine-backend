@@ -1,5 +1,7 @@
 package com.senai.abcgjl_smartcusine_backend.interfaces.controller;
 
+import com.senai.abcgjl_smartcusine_backend.application.dto.UsuarioRequestDTO;
+import com.senai.abcgjl_smartcusine_backend.application.dto.UsuarioResponseDTO;
 import com.senai.abcgjl_smartcusine_backend.application.service.UsuarioService;
 import com.senai.abcgjl_smartcusine_backend.domain.entity.UsuarioEntity;
 import org.springframework.http.ResponseEntity;
@@ -18,12 +20,13 @@ public class UsuarioController {
     }
 
     @PostMapping
-    public ResponseEntity<UsuarioEntity> cadastrar(@RequestBody UsuarioEntity usuario) {
-        return ResponseEntity.ok(usuarioService.cadastrarUsuario(usuario));
+    public ResponseEntity<UsuarioResponseDTO> cadastrar(
+            @RequestBody UsuarioRequestDTO dto) {
+        return ResponseEntity.ok(usuarioService.cadastrarUsuario(dto));
     }
 
     @GetMapping
-    public ResponseEntity<List<UsuarioEntity>> listar() {
+    public ResponseEntity<List<UsuarioResponseDTO>> listar() {
         return ResponseEntity.ok(usuarioService.listarUsuarios());
     }
 
@@ -33,4 +36,20 @@ public class UsuarioController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<UsuarioResponseDTO> buscarPorId(@PathVariable Long id) {
+        return ResponseEntity.ok(usuarioService.buscarPorId(id));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UsuarioResponseDTO> atualizar(
+            @PathVariable Long id,
+            @RequestBody UsuarioRequestDTO dto) {
+
+        return ResponseEntity.ok(usuarioService.atualizarUsuario(id, dto));
+    }
+
 }
+
+
+

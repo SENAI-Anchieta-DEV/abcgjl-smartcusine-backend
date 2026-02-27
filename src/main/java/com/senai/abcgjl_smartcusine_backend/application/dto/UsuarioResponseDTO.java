@@ -9,4 +9,28 @@ public class UsuarioResponseDTO {
     private String email;
     private TipoUsuario tipo;
 
+    public UsuarioResponseDTO(Long id, String nome, String email, TipoUsuario tipo){
+        this.id = id;
+        this.nome = nome;
+        this.email = email;
+        this.tipo = tipo;
+    }
+
+    public Long getId(){
+        return id;
+    }
+
+    public String getNome(){
+        return nome;
+    }
+
+    public String getEmail(){
+        return email;
+    }
+
+    public TipoUsuario getTipo(){
+        return tipo;
+    }
 }
+
+

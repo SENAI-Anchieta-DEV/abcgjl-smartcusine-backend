@@ -8,7 +8,7 @@ import jakarta.persistence.*;
 @Table(name = "usuarios")
 public class UsuarioEntity {
 
-    @id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -21,4 +21,43 @@ public class UsuarioEntity {
 
     @Enumerated(EnumType.STRING)
     private TipoUsuario tipo;
+
+    public UsuarioEntity() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public TipoUsuario getTipo() {
+        return tipo;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
+
+    public void setTipo(TipoUsuario tipo) {
+        this.tipo = tipo;
+    }
 }

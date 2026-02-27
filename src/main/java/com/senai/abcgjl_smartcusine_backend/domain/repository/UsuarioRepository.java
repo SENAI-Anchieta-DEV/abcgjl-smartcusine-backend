@@ -1,7 +1,7 @@
 package com.senai.abcgjl_smartcusine_backend.domain.repository;
 
 import com.senai.abcgjl_smartcusine_backend.domain.entity.UsuarioEntity;
-import org.apache.el.stream.Optional;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
