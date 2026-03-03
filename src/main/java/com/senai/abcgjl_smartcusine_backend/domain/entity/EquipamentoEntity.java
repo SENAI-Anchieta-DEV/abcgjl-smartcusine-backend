@@ -1,44 +1,42 @@
 package com.senai.abcgjl_smartcusine_backend.domain.entity;
 
-import com.senai. abcgjl_smartcusine_backend.domain.enums.StatusEquipamento;
-import java.time.LocalDateTime;
+
+import jakarta.persistence.*;
+
+import java.util.List;
 import java.util.UUID;
 
-public class EquipamentoEntity {
+@Entity
+    @Table(name = "equipamentos")
+    public class EquipamentoEntity {
 
-    private UUID id;
-    private String nome;
-    private Double temperaturaAtual;
-    private Double temperaturaMinima;
-    private Double temperaturaMaxima;
-    private StatusEquipamento status;
-    private LocalDateTime ultimaAtualizacao;
+        @Id
+        @GeneratedValue(strategy = GenerationType.UUID)
+        private UUID idEquipamento;
 
-    public EquipamentoEntity(String nome, Double temperaturaMinima, Double temperaturaMaxima) {
-        this.id = UUID.randomUUID();
-        this.nome = nome;
-        this.temperaturaMinima = temperaturaMinima;
-        this.temperaturaMaxima = temperaturaMaxima;
-        this.status = StatusEquipamento.NORMAL;
-        this.ultimaAtualizacao = LocalDateTime.now();
+        private String tipo;
+        private Double temperaturaAtual;
+        private Double temperaturaIdeal;
+
+        @OneToOne(mappedBy = "equipamento", cascade = CascadeType.ALL)
+        private TemporizadorEntity temporizadorEntity;
+
+        @OneToMany(mappedBy = "equipamento", cascade = CascadeType.ALL)
+        private List<AlertaEntity> alertas;
+
+        @OneToOne
+        private FichaTecnicaEntity fichaTecnica;
+
+    protected EquipamentoEntity() {}
+
+    public EquipamentoEntity(String tipo, Double temperaturaIdeal) {
+        this.tipo = tipo;
+        this.temperaturaIdeal = temperaturaIdeal;
     }
 
-    public void atualizarTemperatura(Double novaTemperatura) {
-        this.temperaturaAtual = novaTemperatura;
-        this.ultimaAtualizacao = LocalDateTime.now();
-        validarTemperatura();
-    }
+    public void consultarTemperatura() {}
 
-    private void validarTemperatura() {
-        if (temperaturaAtual < temperaturaMinima || temperaturaAtual > temperaturaMaxima) {
-            this.status = StatusEquipamento.ALERTA;
-        } else {
-            this.status = StatusEquipamento.NORMAL;
-        }
+    public boolean temperaturaForaDoPadrao() {
+        return !temperaturaAtual.equals(temperaturaIdeal);
     }
-
-    public UUID getId() { return id; }
-    public String getNome() { return nome; }
-    public Double getTemperaturaAtual() { return temperaturaAtual; }
-    public StatusEquipamento getStatus() { return status; }
 }
