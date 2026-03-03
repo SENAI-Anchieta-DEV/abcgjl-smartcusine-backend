@@ -26,11 +26,11 @@ import java.util.UUID;
         }
 
         public void login() {
-            // regra futura
+
         }
 
         public void logout() {
-            // regra futura
+
         }
 
         public UUID getIdUsuario() {
