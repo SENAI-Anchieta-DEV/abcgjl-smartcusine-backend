@@ -1,12 +1,18 @@
 package com.senai.abcgjl_smartcusine_backend.domain.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 import java.util.UUID;
 
 @Entity
 @Table(name = "temporizadores")
+@NoArgsConstructor
+@Setter
+@Getter
 public class TemporizadorEntity {
 
     @Id
@@ -23,12 +29,6 @@ public class TemporizadorEntity {
     @OneToMany(mappedBy = "temporizador", cascade = CascadeType.ALL)
     private List<AlertaEntity> alertas;
 
-    protected TemporizadorEntity() {}
-
-    public TemporizadorEntity(Integer tempoConfigurado, Equipamento equipamento) {
-        this.tempoConfigurado = tempoConfigurado;
-        this.equipamento = equipamento;
-    }
 
     public void iniciar() {}
     public void pausar() {}
