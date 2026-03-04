@@ -1,4 +1,4 @@
 package com.senai.abcgjl_smartcusine_backend.application.dto;
 
-public class UsuarioDTO {
+public class TemporizadorDTO {
 }
