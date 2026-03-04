@@ -3,6 +3,8 @@ package com.senai.abcgjl_smartcusine_backend.application.service;
 import com.senai.abcgjl_smartcusine_backend.application.dto.AuthDTO;
 import com.senai.abcgjl_smartcusine_backend.domain.entity.UsuarioEntity;
 import com.senai.abcgjl_smartcusine_backend.domain.exception.UsuarioNaoEncontradoException;
+import com.senai.abcgjl_smartcusine_backend.domain.repository.UsuarioRepository;
+import com.senai.abcgjl_smartcusine_backend.infrastructure.security.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
