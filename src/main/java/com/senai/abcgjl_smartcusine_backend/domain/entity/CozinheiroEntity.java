@@ -14,7 +14,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @SuperBuilder
 
-public class CozinheiroEntity extends Usuario {
+public class CozinheiroEntity {
 
     public void configurarTemporizador() {}
     public void registrarInsumo() {}

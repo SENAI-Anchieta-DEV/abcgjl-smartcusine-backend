@@ -4,15 +4,19 @@ import com.senai.abcgjl_smartcusine_backend.application.dto.UsuarioRequestDTO;
 import com.senai.abcgjl_smartcusine_backend.application.dto.UsuarioResponseDTO;
 import com.senai.abcgjl_smartcusine_backend.domain.entity.UsuarioEntity;
 import com.senai.abcgjl_smartcusine_backend.domain.repository.UsuarioRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+
 public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
+
 
     public UsuarioService(UsuarioRepository usuarioRepository) {
         this.usuarioRepository = usuarioRepository;
@@ -33,6 +37,7 @@ public class UsuarioService {
         usuario.setTipo(dto.getTipo());
 
         UsuarioEntity salvo = usuarioRepository.save(usuario);
+
 
         return new UsuarioResponseDTO(
                 salvo.getId(),
@@ -56,6 +61,7 @@ public class UsuarioService {
 
     public void deletarUsuario(Long id) {
         usuarioRepository.deleteById(id);
+
     }
 
 
@@ -90,5 +96,6 @@ public class UsuarioService {
                 atualizado.getEmail(),
                 atualizado.getTipo()
         );
+
     }
 }

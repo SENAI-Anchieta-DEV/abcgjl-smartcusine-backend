@@ -13,7 +13,7 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @NoArgsConstructor
 @SuperBuilder
-public class AdministradorEntity extends Usuario {
+public class AdministradorEntity {
 
     public void cadastrarUsuarios() {
     }
