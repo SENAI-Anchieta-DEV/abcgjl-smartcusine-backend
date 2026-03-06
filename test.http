@@ -1,18 +1,19 @@
 ### listar usuário
-GET http://localhost:8080/usuarios
+GET http://localhost:8080/fichas-tecnicas
 
 
 ### Criar usuário
-POST http://localhost:8080/usuarios
+POST http://localhost:8080/fichas-tecnicas
 Content-Type: application/json
 
 {
-  "nome": "Laura",
-  "email": "laura@email.com"
+  "nomePreparo": "Lasanha",
+  "tempoIdeal": 40,
+  "temperaturaIdeal": 180
 }
 
 ### Buscar usuário por ID
-GET http://localhost:8080/usuarios/1
+GET http://localhost:8080/fichas-tecnicas
 
 ### Atualizar usuário
 PUT http://localhost:8080/usuarios/1
@@ -24,4 +25,4 @@ Content-Type: application/json
 }
 
 ### Deletar usuário
-DELETE http://localhost:8080/usuarios/1
+DELETE http://localhost:8080/fichas-tecnicas/e878f382-9391-4e32-a3c9-dc805a15b33e

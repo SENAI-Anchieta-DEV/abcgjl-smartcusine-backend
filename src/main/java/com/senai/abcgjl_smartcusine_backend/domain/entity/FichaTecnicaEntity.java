@@ -16,7 +16,7 @@ public class FichaTecnicaEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID idFicha;
+    private UUID id;
 
     private String nomePreparo;
     private String tempoIdeal;
