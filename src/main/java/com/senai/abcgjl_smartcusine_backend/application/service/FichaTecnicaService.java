@@ -5,7 +5,6 @@ import com.senai.abcgjl_smartcusine_backend.application.dto.FichaTecnicaResponse
 import com.senai.abcgjl_smartcusine_backend.application.mapper.FichaTecnicaMapper;
 import com.senai.abcgjl_smartcusine_backend.domain.entity.FichaTecnicaEntity;
 import com.senai.abcgjl_smartcusine_backend.domain.repository.FichaTecnicaRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,7 +19,7 @@ public class FichaTecnicaService {
         this.repository = repository;
     }
 
-    public FichaTecnicaResponseDTO criar(FichaTecnicaRequestDTO dto){
+    public FichaTecnicaResponseDTO criar(FichaTecnicaRequestDTO dto) {
 
         FichaTecnicaEntity ficha = FichaTecnicaMapper.toEntity(dto);
 
@@ -29,14 +28,33 @@ public class FichaTecnicaService {
         return FichaTecnicaMapper.toResponseDTO(salva);
     }
 
-    public List<FichaTecnicaResponseDTO> listar(){
+    public List<FichaTecnicaResponseDTO> listar() {
         return repository.findAll()
                 .stream()
                 .map(FichaTecnicaMapper::toResponseDTO)
                 .toList();
     }
 
-    public void deletar(UUID id){
+    public FichaTecnicaResponseDTO atualizar(UUID id, FichaTecnicaRequestDTO dto) {
+
+        FichaTecnicaEntity ficha = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Ficha técnica não encontrada"));
+
+        ficha.setNomePreparo(dto.getNomePreparo());
+        ficha.setTempoIdeal(dto.getTempoIdeal());
+        ficha.setTemperaturaIdeal(dto.getTemperaturaIdeal());
+
+        FichaTecnicaEntity atualizada = repository.save(ficha);
+
+        return FichaTecnicaMapper.toResponseDTO(atualizada);
+    }
+
+    public void deletar(UUID id) {
+
+        if (!repository.existsById(id)) {
+            throw new RuntimeException("Ficha técnica não encontrada");
+        }
+
         repository.deleteById(id);
     }
 }
