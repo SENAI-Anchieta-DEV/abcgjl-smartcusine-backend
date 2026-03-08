@@ -4,6 +4,7 @@ import com.senai.abcgjl_smartcusine_backend.application.dto.UsuarioRequestDTO;
 import com.senai.abcgjl_smartcusine_backend.application.dto.UsuarioResponseDTO;
 import com.senai.abcgjl_smartcusine_backend.application.service.UsuarioService;
 import com.senai.abcgjl_smartcusine_backend.domain.entity.UsuarioEntity;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
