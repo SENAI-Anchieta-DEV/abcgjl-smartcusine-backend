@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -21,4 +22,7 @@ public class FichaTecnicaEntity {
     private String nomePreparo;
     private String tempoIdeal;
     private Double temperaturaIdeal;
+
+    @OneToMany(mappedBy = "fichaTecnica", cascade = CascadeType.ALL)
+    private List<FichaTecnicaInsumoEntity> insumos;
 }

@@ -1,10 +1,10 @@
 package com.senai.abcgjl_smartcusine_backend.domain.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -12,6 +12,8 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class InsumoEntity {
 
     @Id
@@ -19,6 +21,12 @@ public class InsumoEntity {
     private UUID idInsumo;
 
     private String nome;
-    private String dataValidade;
+    private String unidadeMedida;
+    private Double quantidadeEstoque;
+    private LocalDate dataValidade;
     private String qrCode;
+
+    @OneToMany(mappedBy = "insumo")
+    private List<FichaTecnicaInsumoEntity> fichasTecnicas;
+
 }
