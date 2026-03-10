@@ -1,4 +1,9 @@
 package com.senai.abcgjl_smartcusine_backend.domain.repository;
 
-public class AlertaRepository {
+import com.senai.abcgjl_smartcusine_backend.domain.entity.AlertaEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.UUID;
+
+public interface AlertaRepository extends JpaRepository <AlertaEntity, UUID> {
 }
