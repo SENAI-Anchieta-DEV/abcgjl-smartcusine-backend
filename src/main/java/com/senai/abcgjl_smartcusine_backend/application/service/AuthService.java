@@ -25,6 +25,6 @@ public class AuthService {
             throw new BadCredentialsException("Credenciais inválidas");
         }
 
-        return jwt.generateToken(usuario.getEmail(), usuario.getRole().name());
+        return jwt.generateToken(usuario.getEmail(), usuario.getTipo().name());
     }
 }
