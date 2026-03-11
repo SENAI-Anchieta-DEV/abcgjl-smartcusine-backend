@@ -4,6 +4,8 @@ import com.senai.abcgjl_smartcusine_backend.application.dto.UsuarioRequestDTO;
 import com.senai.abcgjl_smartcusine_backend.application.dto.UsuarioResponseDTO;
 import com.senai.abcgjl_smartcusine_backend.application.mapper.UsuarioMapper;
 import com.senai.abcgjl_smartcusine_backend.domain.entity.UsuarioEntity;
+import com.senai.abcgjl_smartcusine_backend.domain.exception.EmailJaCadastradoException;
+import com.senai.abcgjl_smartcusine_backend.domain.exception.UsuarioNaoEncontradoException;
 import com.senai.abcgjl_smartcusine_backend.domain.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -25,7 +27,7 @@ public class UsuarioService {
     public UsuarioResponseDTO cadastrarUsuario(UsuarioRequestDTO dto) {
 
         if (usuarioRepository.findByEmail(dto.getEmail()).isPresent()) {
-            throw new RuntimeException("Email já cadastrado.");
+            throw new EmailJaCadastradoException();
         }
 
         UsuarioEntity usuario = UsuarioMapper.toEntity(dto);
@@ -49,7 +51,7 @@ public class UsuarioService {
     public UsuarioResponseDTO buscarPorId(Long id) {
 
         UsuarioEntity usuario = usuarioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+                .orElseThrow(() -> new UsuarioNaoEncontradoException());
 
         return UsuarioMapper.toResponseDTO(usuario);
     }
@@ -57,7 +59,7 @@ public class UsuarioService {
     public UsuarioResponseDTO atualizarUsuario(Long id, UsuarioRequestDTO dto) {
 
         UsuarioEntity usuario = usuarioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+                .orElseThrow(() -> new UsuarioNaoEncontradoException());
 
         usuario.setNome(dto.getNome());
         usuario.setEmail(dto.getEmail());
