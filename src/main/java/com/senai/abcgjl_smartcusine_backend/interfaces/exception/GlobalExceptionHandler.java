@@ -40,8 +40,8 @@ public class GlobalExceptionHandler {
         );
     }
 
-    @ExceptionHandler(RecursoNaoEncontradoException.class)
-    public ProblemDetail handlerRecursoNaoEncontrado (RecursoNaoEncontradoException ex, HttpServletRequest request){
+    @ExceptionHandler(InsumoNaoEncontradoException.class)
+    public ProblemDetail handlerRecursoNaoEncontrado (InsumoNaoEncontradoException ex, HttpServletRequest request){
         return ProblemDetailUtils.buildProblem(
                 HttpStatus.NOT_FOUND,
                 "Recurso não encontrado.",
