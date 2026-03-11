@@ -26,7 +26,7 @@ public class FichaTecnicaInsumoService {
     @Autowired
     private InsumoRepository insumoRepository;
 
-    public FichaTecnicaInsumoEntity adicionarInsumo(UUID idFicha, UUID idInsumo, Double quantidade){
+    public FichaTecnicaInsumoResponseDTO adicionarInsumo(UUID idFicha, UUID idInsumo, Double quantidade){
 
         FichaTecnicaEntity ficha = fichaTecnicaRepository.findById(idFicha)
                 .orElseThrow(() -> new RuntimeException("Ficha técnica não encontrada"));
@@ -40,7 +40,9 @@ public class FichaTecnicaInsumoService {
         relacao.setInsumo(insumo);
         relacao.setQuantidade(quantidade);
 
-        return fichaTecnicaInsumoRepository.save(relacao);
+        FichaTecnicaInsumoEntity salva = fichaTecnicaInsumoRepository.save(relacao);
+
+        return FichaTecnicaInsumoMapper.toDTO(salva);
 
     }
 

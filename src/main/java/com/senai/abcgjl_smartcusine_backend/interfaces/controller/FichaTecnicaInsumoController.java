@@ -1,5 +1,6 @@
 package com.senai.abcgjl_smartcusine_backend.interfaces.controller;
 
+import com.senai.abcgjl_smartcusine_backend.application.dto.FichaTecnicaInsumoRequestDTO;
 import com.senai.abcgjl_smartcusine_backend.application.dto.FichaTecnicaInsumoResponseDTO;
 import com.senai.abcgjl_smartcusine_backend.application.service.FichaTecnicaInsumoService;
 import com.senai.abcgjl_smartcusine_backend.domain.entity.FichaTecnicaInsumoEntity;
@@ -17,12 +18,14 @@ public class FichaTecnicaInsumoController {
     private FichaTecnicaInsumoService service;
 
     @PostMapping
-    public FichaTecnicaInsumoEntity adicionarInsumo(
-            @RequestParam UUID idFicha,
-            @RequestParam UUID idInsumo,
-            @RequestParam Double quantidade){
+    public FichaTecnicaInsumoResponseDTO adicionarInsumo(
+            @RequestBody FichaTecnicaInsumoRequestDTO dto){
 
-        return service.adicionarInsumo(idFicha, idInsumo, quantidade);
+        return service.adicionarInsumo(
+                dto.fichaTecnicaId(),
+                dto.insumoId(),
+                dto.quantidade()
+        );
     }
 
     @GetMapping
