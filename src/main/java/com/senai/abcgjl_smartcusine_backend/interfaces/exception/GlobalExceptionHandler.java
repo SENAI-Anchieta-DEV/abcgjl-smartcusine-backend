@@ -59,4 +59,74 @@ public class GlobalExceptionHandler {
                 request.getRequestURI()
         );
     }
+
+    @ExceptionHandler(AlertaNaoEncontradoException.class)
+    public ProblemDetail handlerAlertaNaoEncontrado (AlertaNaoEncontradoException ex, HttpServletRequest request){
+        return ProblemDetailUtils.buildProblem(
+                HttpStatus.NOT_FOUND,
+                "Alerta não encontrado.",
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+    }
+
+    @ExceptionHandler(CredenciaisInvalidasException.class)
+    public ProblemDetail handlerCredenciaisInvalidas (CredenciaisInvalidasException ex, HttpServletRequest request){
+        return ProblemDetailUtils.buildProblem(
+                HttpStatus.UNAUTHORIZED,
+                "Credenciais invalidas.",
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+    }
+
+    @ExceptionHandler(EmailJaCadastradoException.class)
+    public ProblemDetail handlerEmailJaCadastrado (EmailJaCadastradoException ex, HttpServletRequest request){
+        return ProblemDetailUtils.buildProblem(
+                HttpStatus.CONFLICT,
+                "Email ja cadastrado.",
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+    }
+
+    @ExceptionHandler(EquipamentoNaoEncontradoException.class)
+    public ProblemDetail handlerEquipamentoNaoEncontrado (EquipamentoNaoEncontradoException ex, HttpServletRequest request){
+        return ProblemDetailUtils.buildProblem(
+                HttpStatus.NOT_FOUND,
+                "Equipamento não encontrado.",
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+    }
+
+    @ExceptionHandler(FichaTecnicaNaoEncontradaException.class)
+    public ProblemDetail handlerFichaTecnicaNaoEncontrada (FichaTecnicaNaoEncontradaException ex, HttpServletRequest request){
+        return ProblemDetailUtils.buildProblem(
+                HttpStatus.NOT_FOUND,
+                "Ficha técnica não encontrada.",
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+    }
+
+    @ExceptionHandler(UsuarioNaoEncontradoException.class)
+    public ProblemDetail handlerUsuarioNaoEncontrado (UsuarioNaoEncontradoException ex, HttpServletRequest request){
+        return ProblemDetailUtils.buildProblem(
+                HttpStatus.NOT_FOUND,
+                "Usuário não encontrado.",
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+    }
+
+    @ExceptionHandler(TemporizadorNaoEncontradoException.class)
+    public ProblemDetail handlerTemporizadorNaoEncontrado (TemporizadorNaoEncontradoException ex, HttpServletRequest request){
+        return ProblemDetailUtils.buildProblem(
+                HttpStatus.NOT_FOUND,
+                "Temporizador não encontrado.",
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+    }
 }
