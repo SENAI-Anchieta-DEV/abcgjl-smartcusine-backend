@@ -4,6 +4,7 @@ import com.senai.abcgjl_smartcusine_backend.application.dto.FichaTecnicaRequestD
 import com.senai.abcgjl_smartcusine_backend.application.dto.FichaTecnicaResponseDTO;
 import com.senai.abcgjl_smartcusine_backend.application.mapper.FichaTecnicaMapper;
 import com.senai.abcgjl_smartcusine_backend.domain.entity.FichaTecnicaEntity;
+import com.senai.abcgjl_smartcusine_backend.domain.exception.FichaTecnicaNaoEncontradaException;
 import com.senai.abcgjl_smartcusine_backend.domain.repository.FichaTecnicaRepository;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +39,7 @@ public class FichaTecnicaService {
     public FichaTecnicaResponseDTO atualizar(UUID id, FichaTecnicaRequestDTO dto) {
 
         FichaTecnicaEntity ficha = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Ficha técnica não encontrada"));
+                .orElseThrow(() -> new FichaTecnicaNaoEncontradaException());
 
         ficha.setNomePreparo(dto.getNomePreparo());
         ficha.setTempoIdeal(dto.getTempoIdeal());
@@ -52,7 +53,7 @@ public class FichaTecnicaService {
     public void deletar(UUID id) {
 
         if (!repository.existsById(id)) {
-            throw new RuntimeException("Ficha técnica não encontrada");
+            throw new FichaTecnicaNaoEncontradaException();
         }
 
         repository.deleteById(id);
