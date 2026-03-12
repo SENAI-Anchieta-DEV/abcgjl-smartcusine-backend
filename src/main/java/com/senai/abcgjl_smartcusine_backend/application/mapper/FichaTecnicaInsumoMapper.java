@@ -9,6 +9,7 @@ public class FichaTecnicaInsumoMapper {
 
         FichaTecnicaInsumoResponseDTO dto = new FichaTecnicaInsumoResponseDTO();
 
+        dto.setId(entity.getId());
         dto.setNomeInsumo(entity.getInsumo().getNome());
         dto.setNomePreparo(entity.getFichaTecnica().getNomePreparo());
         dto.setQuantidade(entity.getQuantidade());

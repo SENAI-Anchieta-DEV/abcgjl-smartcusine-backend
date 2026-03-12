@@ -34,10 +34,11 @@ public class FichaTecnicaInsumoController {
     }
 
     @PutMapping("/{id}")
-    public FichaTecnicaInsumoEntity atualizarQuantidade(
+    public FichaTecnicaInsumoResponseDTO atualizar(
             @PathVariable UUID id,
-            @RequestParam Double quantidade){
-        return service.atualizarQuantidade(id, quantidade);
+            @RequestBody FichaTecnicaInsumoRequestDTO dto){
+
+        return service.atualizar(id, dto);
     }
 
     @DeleteMapping("/{id}")

@@ -1,5 +1,6 @@
 package com.senai.abcgjl_smartcusine_backend.application.service;
 
+import com.senai.abcgjl_smartcusine_backend.application.dto.FichaTecnicaInsumoRequestDTO;
 import com.senai.abcgjl_smartcusine_backend.application.dto.FichaTecnicaInsumoResponseDTO;
 import com.senai.abcgjl_smartcusine_backend.application.mapper.FichaTecnicaInsumoMapper;
 import com.senai.abcgjl_smartcusine_backend.domain.entity.FichaTecnicaEntity;
@@ -58,14 +59,16 @@ public class FichaTecnicaInsumoService {
         fichaTecnicaInsumoRepository.deleteById(id);
     }
 
-    public FichaTecnicaInsumoEntity atualizarQuantidade(UUID id, Double quantidade){
+    public FichaTecnicaInsumoResponseDTO atualizar(UUID id, FichaTecnicaInsumoRequestDTO dto){
 
         FichaTecnicaInsumoEntity relacao = fichaTecnicaInsumoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Relação não encontrada"));
 
-        relacao.setQuantidade(quantidade);
+        relacao.setQuantidade(dto.quantidade());
 
-        return fichaTecnicaInsumoRepository.save(relacao);
+        FichaTecnicaInsumoEntity salva = fichaTecnicaInsumoRepository.save(relacao);
+
+        return FichaTecnicaInsumoMapper.toDTO(salva);
     }
 
 }
