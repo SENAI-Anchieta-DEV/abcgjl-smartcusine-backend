@@ -4,6 +4,7 @@ import com.senai.abcgjl_smartcusine_backend.application.dto.FichaTecnicaInsumoRe
 import com.senai.abcgjl_smartcusine_backend.application.dto.FichaTecnicaInsumoResponseDTO;
 import com.senai.abcgjl_smartcusine_backend.application.service.FichaTecnicaInsumoService;
 import com.senai.abcgjl_smartcusine_backend.domain.entity.FichaTecnicaInsumoEntity;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +20,7 @@ public class FichaTecnicaInsumoController {
 
     @PostMapping
     public FichaTecnicaInsumoResponseDTO adicionarInsumo(
-            @RequestBody FichaTecnicaInsumoRequestDTO dto){
+            @Valid @RequestBody FichaTecnicaInsumoRequestDTO dto){
 
         return service.adicionarInsumo(
                 dto.fichaTecnicaId(),

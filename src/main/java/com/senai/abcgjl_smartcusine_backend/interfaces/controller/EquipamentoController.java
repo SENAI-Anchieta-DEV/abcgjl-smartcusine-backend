@@ -2,6 +2,7 @@ package com.senai.abcgjl_smartcusine_backend.interfaces.controller;
 
 import com.senai.abcgjl_smartcusine_backend.application.service.EquipamentoService;
 import com.senai.abcgjl_smartcusine_backend.domain.entity.EquipamentoEntity;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,22 +18,24 @@ public class EquipamentoController {
     }
 
     @PostMapping
-    public EquipamentoEntity criar(@RequestBody EquipamentoEntity equipamento) {
+    public EquipamentoEntity criar( @Valid @RequestBody EquipamentoEntity equipamento) {
         return service.criar(equipamento);
     }
 
     @GetMapping
     public List<EquipamentoEntity> listar() {
+
         return service.listar();
     }
 
     @GetMapping("/{id}")
     public EquipamentoEntity buscar(@PathVariable UUID id) {
+
         return service.buscarPorId(id);
     }
 
     @PutMapping("/{id}")
-    public EquipamentoEntity atualizar(@PathVariable UUID id, @RequestBody EquipamentoEntity equipamento) {
+    public EquipamentoEntity atualizar(@PathVariable UUID id, @Valid @RequestBody EquipamentoEntity equipamento) {
         return service.atualizar(id, equipamento);
     }
 
