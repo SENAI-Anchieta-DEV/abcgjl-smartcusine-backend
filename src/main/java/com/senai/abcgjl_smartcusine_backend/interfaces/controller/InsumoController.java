@@ -3,6 +3,7 @@ package com.senai.abcgjl_smartcusine_backend.interfaces.controller;
 import com.senai.abcgjl_smartcusine_backend.application.dto.InsumoRequestDTO;
 import com.senai.abcgjl_smartcusine_backend.application.dto.InsumoResponseDTO;
 import com.senai.abcgjl_smartcusine_backend.application.service.InsumoService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +22,7 @@ public class InsumoController {
 
     @PostMapping
     public ResponseEntity<InsumoResponseDTO> criar(
-            @RequestBody InsumoRequestDTO dto){
+            @Valid @RequestBody InsumoRequestDTO dto){
 
         return ResponseEntity.ok(service.criar(dto));
     }
@@ -42,7 +43,7 @@ public class InsumoController {
     @PutMapping("/{id}")
     public ResponseEntity<InsumoResponseDTO> atualizar(
             @PathVariable UUID id,
-            @RequestBody InsumoRequestDTO dto){
+            @Valid @RequestBody InsumoRequestDTO dto){
 
         return ResponseEntity.ok(service.atualizar(id, dto));
     }

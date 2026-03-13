@@ -1,5 +1,6 @@
 package com.senai.abcgjl_smartcusine_backend.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -25,6 +26,7 @@ public class InsumoEntity {
     private Double quantidadeEstoque;
     private LocalDate dataValidade;
     private String qrCode;
+
 
     @OneToMany(mappedBy = "insumo")
     private List<FichaTecnicaInsumoEntity> fichasTecnicas;

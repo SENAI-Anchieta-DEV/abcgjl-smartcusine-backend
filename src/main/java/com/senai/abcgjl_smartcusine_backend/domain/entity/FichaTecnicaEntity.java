@@ -1,9 +1,8 @@
 package com.senai.abcgjl_smartcusine_backend.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -13,6 +12,8 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class FichaTecnicaEntity {
 
     @Id
@@ -23,6 +24,7 @@ public class FichaTecnicaEntity {
     private String tempoIdeal;
     private Double temperaturaIdeal;
 
-    @OneToMany(mappedBy = "fichaTecnica", cascade = CascadeType.ALL)
+
+    @OneToMany(mappedBy = "fichaTecnica")
     private List<FichaTecnicaInsumoEntity> insumos;
 }

@@ -4,6 +4,7 @@ import com.senai.abcgjl_smartcusine_backend.application.dto.UsuarioRequestDTO;
 import com.senai.abcgjl_smartcusine_backend.application.dto.UsuarioResponseDTO;
 import com.senai.abcgjl_smartcusine_backend.application.service.UsuarioService;
 import com.senai.abcgjl_smartcusine_backend.domain.entity.UsuarioEntity;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +23,7 @@ public class UsuarioController {
 
     @PostMapping
     public ResponseEntity<UsuarioResponseDTO> cadastrar(
-            @RequestBody UsuarioRequestDTO dto) {
+            @Valid @RequestBody UsuarioRequestDTO dto) {
         return ResponseEntity.ok(usuarioService.cadastrarUsuario(dto));
     }
 
@@ -44,7 +45,7 @@ public class UsuarioController {
 
     @PutMapping("/{id}")
     public ResponseEntity<UsuarioResponseDTO> atualizar(
-            @PathVariable Long id,
+            @Valid @PathVariable Long id,
             @RequestBody UsuarioRequestDTO dto) {
 
         return ResponseEntity.ok(usuarioService.atualizarUsuario(id, dto));

@@ -4,10 +4,12 @@ import com.senai.abcgjl_smartcusine_backend.application.dto.AlertaResponseDTO;
 import com.senai.abcgjl_smartcusine_backend.application.mapper.AlertaMapper;
 import com.senai.abcgjl_smartcusine_backend.domain.exception.AlertaNaoEncontradoException;
 import com.senai.abcgjl_smartcusine_backend.domain.repository.AlertaRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 
+@Service
 public class AlertaService {
 
     private final AlertaRepository repository;

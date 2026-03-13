@@ -3,6 +3,7 @@ package com.senai.abcgjl_smartcusine_backend.interfaces.controller;
 import com.senai.abcgjl_smartcusine_backend.application.dto.FichaTecnicaRequestDTO;
 import com.senai.abcgjl_smartcusine_backend.application.dto.FichaTecnicaResponseDTO;
 import com.senai.abcgjl_smartcusine_backend.application.service.FichaTecnicaService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +24,7 @@ public class FichaTecnicaController {
     // CRIAR - apenas ADMIN ou GERENTE
     @PreAuthorize("hasRole('ADMIN') or hasRole('GERENTE')")
     @PostMapping
-    public ResponseEntity<FichaTecnicaResponseDTO> criar(@RequestBody FichaTecnicaRequestDTO dto) {
+    public ResponseEntity<FichaTecnicaResponseDTO> criar( @Valid @RequestBody FichaTecnicaRequestDTO dto) {
         return ResponseEntity.ok(service.criar(dto));
     }
 
@@ -37,7 +38,7 @@ public class FichaTecnicaController {
     @PreAuthorize("hasRole('ADMIN') or hasRole('GERENTE')")
     @PutMapping("/{id}")
     public ResponseEntity<FichaTecnicaResponseDTO> atualizar(
-            @PathVariable UUID id, @RequestBody FichaTecnicaRequestDTO dto) {
+            @PathVariable UUID id, @Valid @RequestBody FichaTecnicaRequestDTO dto) {
         return ResponseEntity.ok(service.atualizar(id, dto));
     }
 

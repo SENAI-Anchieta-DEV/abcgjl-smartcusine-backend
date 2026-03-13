@@ -4,21 +4,23 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.UUID;
 
 @Getter
 @Setter
-@NoArgsConstructor
-public class FichaTecnicaRequestDTO {
+public class FichaTecnicaInsumoResponseDTO {
+
+    private UUID id;
+
+    @NotBlank(message = "O nome do insumo não pode estar vazio")
+    private String nomeInsumo;
 
     @NotBlank(message = "O nome do preparo não pode estar vazio")
     private String nomePreparo;
 
-    @NotBlank(message = "O tempo ideal não pode estar vazio")
-    private String tempoIdeal;
-
-    @NotNull(message = "A temperatura ideal não pode ser nula")
-    @Positive(message = "A temperatura ideal deve ser positiva")
-    private Double temperaturaIdeal;
+    @NotNull(message = "A quantidade não pode ser nula")
+    @Positive(message = "A quantidade deve ser maior que zero")
+    private Double quantidade;
 }

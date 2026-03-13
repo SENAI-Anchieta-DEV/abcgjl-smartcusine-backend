@@ -8,6 +8,7 @@ import com.senai.abcgjl_smartcusine_backend.domain.exception.EmailJaCadastradoEx
 import com.senai.abcgjl_smartcusine_backend.domain.exception.UsuarioNaoEncontradoException;
 import com.senai.abcgjl_smartcusine_backend.domain.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
@@ -15,13 +16,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-
 public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
+    private final PasswordEncoder encoder;
 
-    public UsuarioService(UsuarioRepository usuarioRepository) {
+    public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder encoder) {
         this.usuarioRepository = usuarioRepository;
+        this.encoder = encoder;
     }
 
     public UsuarioResponseDTO cadastrarUsuario(UsuarioRequestDTO dto) {
@@ -31,6 +33,9 @@ public class UsuarioService {
         }
 
         UsuarioEntity usuario = UsuarioMapper.toEntity(dto);
+
+        // 🔐 criptografa a senha
+        usuario.setSenha(encoder.encode(dto.getSenha()));
 
         UsuarioEntity salvo = usuarioRepository.save(usuario);
 
@@ -63,7 +68,10 @@ public class UsuarioService {
 
         usuario.setNome(dto.getNome());
         usuario.setEmail(dto.getEmail());
-        usuario.setSenha(dto.getSenha());
+
+        // 🔐 criptografa a nova senha
+        usuario.setSenha(encoder.encode(dto.getSenha()));
+
         usuario.setTipo(dto.getTipo());
 
         UsuarioEntity atualizado = usuarioRepository.save(usuario);
