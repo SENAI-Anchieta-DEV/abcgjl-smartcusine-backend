@@ -28,6 +28,10 @@ public class UsuarioService {
 
     public UsuarioResponseDTO cadastrarUsuario(UsuarioRequestDTO dto) {
 
+        if (dto.getSenha().length() < 6) {
+            throw new IllegalArgumentException("A senha deve ter pelo menos 6 caracteres");
+        }
+
         if (usuarioRepository.findByEmail(dto.getEmail()).isPresent()) {
             throw new EmailJaCadastradoException();
         }
@@ -50,7 +54,11 @@ public class UsuarioService {
     }
 
     public void deletarUsuario(Long id) {
-        usuarioRepository.deleteById(id);
+
+        UsuarioEntity usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new UsuarioNaoEncontradoException());
+
+        usuarioRepository.delete(usuario);
     }
 
     public UsuarioResponseDTO buscarPorId(Long id) {
@@ -66,10 +74,17 @@ public class UsuarioService {
         UsuarioEntity usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new UsuarioNaoEncontradoException());
 
+        // verifica se o email já existe em outro usuário
+        if (usuarioRepository.findByEmail(dto.getEmail()).isPresent() &&
+                !usuario.getEmail().equals(dto.getEmail())) {
+
+            throw new EmailJaCadastradoException();
+        }
+
         usuario.setNome(dto.getNome());
         usuario.setEmail(dto.getEmail());
 
-        // 🔐 criptografa a nova senha
+        // criptografa nova senha
         usuario.setSenha(encoder.encode(dto.getSenha()));
 
         usuario.setTipo(dto.getTipo());
