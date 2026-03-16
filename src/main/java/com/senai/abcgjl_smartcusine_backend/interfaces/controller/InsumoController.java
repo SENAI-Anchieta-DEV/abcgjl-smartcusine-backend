@@ -4,6 +4,7 @@ import com.senai.abcgjl_smartcusine_backend.application.dto.InsumoRequestDTO;
 import com.senai.abcgjl_smartcusine_backend.application.dto.InsumoResponseDTO;
 import com.senai.abcgjl_smartcusine_backend.application.service.InsumoService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,7 +12,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/insumo")
+@RequestMapping("/insumos")
 public class InsumoController {
 
     private final InsumoService service;
@@ -24,7 +25,8 @@ public class InsumoController {
     public ResponseEntity<InsumoResponseDTO> criar(
             @Valid @RequestBody InsumoRequestDTO dto){
 
-        return ResponseEntity.ok(service.criar(dto));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(service.criar(dto));
     }
 
     @GetMapping

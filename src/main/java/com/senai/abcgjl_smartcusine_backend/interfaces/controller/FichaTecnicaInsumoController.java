@@ -6,6 +6,8 @@ import com.senai.abcgjl_smartcusine_backend.application.service.FichaTecnicaInsu
 import com.senai.abcgjl_smartcusine_backend.domain.entity.FichaTecnicaInsumoEntity;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,36 +17,42 @@ import java.util.UUID;
 @RequestMapping("/ficha-tecnica-insumos")
 public class FichaTecnicaInsumoController {
 
-    @Autowired
-    private FichaTecnicaInsumoService service;
+    private final FichaTecnicaInsumoService service;
+
+    public FichaTecnicaInsumoController(FichaTecnicaInsumoService service) {
+        this.service = service;
+    }
 
     @PostMapping
-    public FichaTecnicaInsumoResponseDTO adicionarInsumo(
+    public ResponseEntity<FichaTecnicaInsumoResponseDTO> adicionarInsumo(
             @Valid @RequestBody FichaTecnicaInsumoRequestDTO dto){
 
-        return service.adicionarInsumo(
+        FichaTecnicaInsumoResponseDTO response = service.adicionarInsumo(
                 dto.fichaTecnicaId(),
                 dto.insumoId(),
                 dto.quantidade()
         );
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping
-    public List<FichaTecnicaInsumoResponseDTO> listar(){
-        return service.listar();
+    public ResponseEntity<List<FichaTecnicaInsumoResponseDTO>> listar(){
+        return ResponseEntity.ok(service.listar());
     }
 
     @PutMapping("/{id}")
-    public FichaTecnicaInsumoResponseDTO atualizar(
+    public ResponseEntity<FichaTecnicaInsumoResponseDTO> atualizar(
             @PathVariable UUID id,
             @RequestBody FichaTecnicaInsumoRequestDTO dto){
 
-        return service.atualizar(id, dto);
+        return ResponseEntity.ok(service.atualizar(id, dto));
     }
 
     @DeleteMapping("/{id}")
-    public void deletar(@PathVariable UUID id){
+    public ResponseEntity<Void> deletar(@PathVariable UUID id){
         service.deletar(id);
+        return ResponseEntity.noContent().build();
     }
 }
 

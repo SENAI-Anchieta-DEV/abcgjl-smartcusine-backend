@@ -81,6 +81,10 @@ public class UsuarioService {
             throw new EmailJaCadastradoException();
         }
 
+        if (dto.getSenha() != null && !dto.getSenha().isBlank()) {
+            usuario.setSenha(encoder.encode(dto.getSenha()));
+        }
+
         usuario.setNome(dto.getNome());
         usuario.setEmail(dto.getEmail());
 

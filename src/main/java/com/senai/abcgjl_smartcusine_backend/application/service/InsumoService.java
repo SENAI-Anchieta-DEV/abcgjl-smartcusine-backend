@@ -23,6 +23,9 @@ public class InsumoService {
     }
 
     public InsumoResponseDTO criar(InsumoRequestDTO dto){
+        if(repository.existsByNome(dto.nome())){
+            throw new RuntimeException("Já existe um insumo com esse nome");
+        }
 
         InsumoEntity entity = mapper.toEntity(dto);
 
@@ -54,6 +57,10 @@ public class InsumoService {
         InsumoEntity entity = repository.findById(id)
                 .orElseThrow(() -> new InsumoNaoEncontradoException());
 
+        if(repository.existsByNome(dto.nome()) && !entity.getNome().equals(dto.nome())){
+            throw new RuntimeException("Já existe um insumo com esse nome");
+        }
+
         entity.setNome(dto.nome());
         entity.setUnidadeMedida(dto.unidadeMedida());
         entity.setQuantidadeEstoque(dto.quantidadeEstoque());
@@ -66,6 +73,9 @@ public class InsumoService {
 
     public void deletar(UUID id){
 
-        repository.deleteById(id);
+        InsumoEntity entity = repository.findById(id)
+                .orElseThrow(() -> new InsumoNaoEncontradoException());
+
+        repository.delete(entity);
     }
 }

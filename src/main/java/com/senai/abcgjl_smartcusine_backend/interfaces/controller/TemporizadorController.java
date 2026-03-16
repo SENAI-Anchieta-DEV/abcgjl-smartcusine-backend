@@ -3,6 +3,7 @@ package com.senai.abcgjl_smartcusine_backend.interfaces.controller;
 import com.senai.abcgjl_smartcusine_backend.application.dto.TemporizadorDTO;
 import com.senai.abcgjl_smartcusine_backend.application.service.TemporizadorService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +21,8 @@ public class TemporizadorController {
 
     @PostMapping
     public ResponseEntity<TemporizadorDTO> criar(@Valid @RequestBody TemporizadorDTO dto) {
-        return ResponseEntity.ok(temporizadorService.criar(dto));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(temporizadorService.criar(dto));
     }
 
     @GetMapping

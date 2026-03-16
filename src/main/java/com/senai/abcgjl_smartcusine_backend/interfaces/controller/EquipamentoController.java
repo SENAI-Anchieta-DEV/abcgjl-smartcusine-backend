@@ -3,6 +3,8 @@ package com.senai.abcgjl_smartcusine_backend.interfaces.controller;
 import com.senai.abcgjl_smartcusine_backend.application.service.EquipamentoService;
 import com.senai.abcgjl_smartcusine_backend.domain.entity.EquipamentoEntity;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,30 +20,39 @@ public class EquipamentoController {
     }
 
     @PostMapping
-    public EquipamentoEntity criar( @Valid @RequestBody EquipamentoEntity equipamento) {
-        return service.criar(equipamento);
+    public ResponseEntity<EquipamentoEntity> criar(
+            @Valid @RequestBody EquipamentoEntity equipamento) {
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(service.criar(equipamento));
     }
 
     @GetMapping
-    public List<EquipamentoEntity> listar() {
+    public ResponseEntity<List<EquipamentoEntity>> listar() {
 
-        return service.listar();
+        return ResponseEntity.ok(service.listar());
     }
 
     @GetMapping("/{id}")
-    public EquipamentoEntity buscar(@PathVariable UUID id) {
+    public ResponseEntity<EquipamentoEntity> buscar(@PathVariable UUID id) {
 
-        return service.buscarPorId(id);
+        return ResponseEntity.ok(service.buscarPorId(id));
     }
 
     @PutMapping("/{id}")
-    public EquipamentoEntity atualizar(@PathVariable UUID id, @Valid @RequestBody EquipamentoEntity equipamento) {
-        return service.atualizar(id, equipamento);
+    public ResponseEntity<EquipamentoEntity> atualizar(
+            @PathVariable UUID id,
+            @Valid @RequestBody EquipamentoEntity equipamento) {
+
+        return ResponseEntity.ok(service.atualizar(id, equipamento));
     }
 
     @DeleteMapping("/{id}")
-    public void deletar(@PathVariable UUID id) {
+    public ResponseEntity<Void> deletar(@PathVariable UUID id) {
+
         service.deletar(id);
+
+        return ResponseEntity.noContent().build();
     }
 }
 
