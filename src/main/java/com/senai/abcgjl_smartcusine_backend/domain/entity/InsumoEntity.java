@@ -19,7 +19,7 @@ public class InsumoEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID idInsumo;
+    private UUID id;
 
     private String nome;
     private String unidadeMedida;

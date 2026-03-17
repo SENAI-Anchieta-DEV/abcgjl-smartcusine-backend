@@ -4,6 +4,7 @@ import com.senai.abcgjl_smartcusine_backend.application.dto.FichaTecnicaRequestD
 import com.senai.abcgjl_smartcusine_backend.application.dto.FichaTecnicaResponseDTO;
 import com.senai.abcgjl_smartcusine_backend.application.service.FichaTecnicaService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -24,8 +25,11 @@ public class FichaTecnicaController {
     // CRIAR - apenas ADMIN ou GERENTE
     @PreAuthorize("hasRole('ADMIN') or hasRole('GERENTE')")
     @PostMapping
-    public ResponseEntity<FichaTecnicaResponseDTO> criar( @Valid @RequestBody FichaTecnicaRequestDTO dto) {
-        return ResponseEntity.ok(service.criar(dto));
+    public ResponseEntity<FichaTecnicaResponseDTO> criar(
+            @Valid @RequestBody FichaTecnicaRequestDTO dto) {
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(service.criar(dto));
     }
 
     // LISTAR - todos podem acessar

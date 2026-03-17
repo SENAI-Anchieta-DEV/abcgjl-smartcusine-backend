@@ -24,27 +24,29 @@ public class EquipamentoService {
     }
 
     public EquipamentoEntity buscarPorId(UUID id) {
-        return repository.findById(id).orElse(null);
+        return repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Equipamento não encontrado"));
     }
 
     public EquipamentoEntity atualizar(UUID id, EquipamentoEntity equipamento) {
 
-        EquipamentoEntity existente = repository.findById(id).orElse(null);
+        EquipamentoEntity existente = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Equipamento não encontrado"));
 
-        if (existente != null) {
-            existente.setTipo(equipamento.getTipo());
-            existente.setTemperaturaAtual(equipamento.getTemperaturaAtual());
-            existente.setTemperaturaIdeal(equipamento.getTemperaturaIdeal());
-            existente.setFichaTecnica(equipamento.getFichaTecnica());
+        existente.setTipo(equipamento.getTipo());
+        existente.setTemperaturaAtual(equipamento.getTemperaturaAtual());
+        existente.setTemperaturaIdeal(equipamento.getTemperaturaIdeal());
+        existente.setFichaTecnica(equipamento.getFichaTecnica());
 
-            return repository.save(existente);
-        }
-
-        return null;
+        return repository.save(existente);
     }
 
     public void deletar(UUID id) {
-        repository.deleteById(id);
+
+        EquipamentoEntity equipamento = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Equipamento não encontrado"));
+
+        repository.delete(equipamento);
     }
 }
 

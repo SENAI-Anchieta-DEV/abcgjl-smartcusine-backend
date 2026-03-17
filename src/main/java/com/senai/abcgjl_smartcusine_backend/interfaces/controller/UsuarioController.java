@@ -6,6 +6,7 @@ import com.senai.abcgjl_smartcusine_backend.application.service.UsuarioService;
 import com.senai.abcgjl_smartcusine_backend.domain.entity.UsuarioEntity;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,11 +23,10 @@ public class UsuarioController {
     }
 
     @PostMapping
-    public ResponseEntity<UsuarioResponseDTO> cadastrar(
-            @Valid @RequestBody UsuarioRequestDTO dto) {
-        return ResponseEntity.ok(usuarioService.cadastrarUsuario(dto));
+    public ResponseEntity<UsuarioResponseDTO> cadastrar(@RequestBody UsuarioRequestDTO dto){
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(usuarioService.cadastrarUsuario(dto));
     }
-
     @GetMapping
     public ResponseEntity<List<UsuarioResponseDTO>> listar() {
         return ResponseEntity.ok(usuarioService.listarUsuarios());

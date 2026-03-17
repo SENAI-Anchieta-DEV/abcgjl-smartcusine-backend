@@ -22,6 +22,10 @@ public class FichaTecnicaService {
 
     public FichaTecnicaResponseDTO criar(FichaTecnicaRequestDTO dto) {
 
+        if(repository.existsByNomePreparo(dto.getNomePreparo())){
+            throw new RuntimeException("Já existe uma ficha técnica com esse nome");
+        }
+
         FichaTecnicaEntity ficha = FichaTecnicaMapper.toEntity(dto);
 
         FichaTecnicaEntity salva = repository.save(ficha);
@@ -41,6 +45,12 @@ public class FichaTecnicaService {
         FichaTecnicaEntity ficha = repository.findById(id)
                 .orElseThrow(() -> new FichaTecnicaNaoEncontradaException());
 
+        if(repository.existsByNomePreparo(dto.getNomePreparo()) &&
+                !ficha.getNomePreparo().equals(dto.getNomePreparo())){
+
+            throw new RuntimeException("Já existe uma ficha técnica com esse nome");
+        }
+
         ficha.setNomePreparo(dto.getNomePreparo());
         ficha.setTempoIdeal(dto.getTempoIdeal());
         ficha.setTemperaturaIdeal(dto.getTemperaturaIdeal());
@@ -52,10 +62,9 @@ public class FichaTecnicaService {
 
     public void deletar(UUID id) {
 
-        if (!repository.existsById(id)) {
-            throw new FichaTecnicaNaoEncontradaException();
-        }
+        FichaTecnicaEntity ficha = repository.findById(id)
+                .orElseThrow(() -> new FichaTecnicaNaoEncontradaException());
 
-        repository.deleteById(id);
+        repository.delete(ficha);
     }
 }

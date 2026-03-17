@@ -8,4 +8,5 @@ import java.util.UUID;
 
 @Repository
 public interface FichaTecnicaRepository extends JpaRepository<FichaTecnicaEntity, UUID> {
+    boolean existsByNomePreparo(String nomePreparo);
 }

@@ -18,16 +18,29 @@ import java.util.UUID;
 @Service
 public class FichaTecnicaInsumoService {
 
-    @Autowired
-    private FichaTecnicaInsumoRepository fichaTecnicaInsumoRepository;
+    private final FichaTecnicaInsumoRepository fichaTecnicaInsumoRepository;
+    private final FichaTecnicaRepository fichaTecnicaRepository;
+    private final InsumoRepository insumoRepository;
 
-    @Autowired
-    private FichaTecnicaRepository fichaTecnicaRepository;
+    public FichaTecnicaInsumoService(
+            FichaTecnicaInsumoRepository fichaTecnicaInsumoRepository,
+            FichaTecnicaRepository fichaTecnicaRepository,
+            InsumoRepository insumoRepository) {
 
-    @Autowired
-    private InsumoRepository insumoRepository;
+        this.fichaTecnicaInsumoRepository = fichaTecnicaInsumoRepository;
+        this.fichaTecnicaRepository = fichaTecnicaRepository;
+        this.insumoRepository = insumoRepository;
+    }
 
     public FichaTecnicaInsumoResponseDTO adicionarInsumo(UUID idFicha, UUID idInsumo, Double quantidade){
+
+        if (quantidade == null || quantidade <= 0) {
+            throw new IllegalArgumentException("A quantidade deve ser maior que zero");
+        }
+
+        if(fichaTecnicaInsumoRepository.existsByFichaTecnicaIdAndInsumoId(idFicha, idInsumo)){
+            throw new RuntimeException("Este insumo já foi adicionado a esta ficha técnica");
+        }
 
         FichaTecnicaEntity ficha = fichaTecnicaRepository.findById(idFicha)
                 .orElseThrow(() -> new RuntimeException("Ficha técnica não encontrada"));
@@ -60,6 +73,10 @@ public class FichaTecnicaInsumoService {
     }
 
     public FichaTecnicaInsumoResponseDTO atualizar(UUID id, FichaTecnicaInsumoRequestDTO dto){
+
+        if (dto.quantidade() == null || dto.quantidade() <= 0) {
+            throw new IllegalArgumentException("A quantidade deve ser maior que zero");
+        }
 
         FichaTecnicaInsumoEntity relacao = fichaTecnicaInsumoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Relação não encontrada"));
