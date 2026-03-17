@@ -77,19 +77,15 @@ public class UsuarioService {
         // verifica se o email já existe em outro usuário
         if (usuarioRepository.findByEmail(dto.getEmail()).isPresent() &&
                 !usuario.getEmail().equals(dto.getEmail())) {
-
             throw new EmailJaCadastradoException();
-        }
-
-        if (dto.getSenha() != null && !dto.getSenha().isBlank()) {
-            usuario.setSenha(encoder.encode(dto.getSenha()));
         }
 
         usuario.setNome(dto.getNome());
         usuario.setEmail(dto.getEmail());
 
-        // criptografa nova senha
-        usuario.setSenha(encoder.encode(dto.getSenha()));
+        if (dto.getSenha() != null && !dto.getSenha().isBlank()) {
+            usuario.setSenha(encoder.encode(dto.getSenha()));
+        }
 
         usuario.setTipo(dto.getTipo());
 

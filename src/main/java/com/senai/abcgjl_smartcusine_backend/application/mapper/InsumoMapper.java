@@ -25,7 +25,7 @@ public class InsumoMapper {
         boolean alerta = entity.getDataValidade().isBefore(LocalDate.now().plusDays(7));
 
         return new InsumoResponseDTO(
-                entity.getIdInsumo(),
+                entity.getId(),
                 entity.getNome(),
                 entity.getUnidadeMedida(),
                 entity.getQuantidadeEstoque(),
