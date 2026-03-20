@@ -3,6 +3,7 @@ package com.senai.abcgjl_smartcusine_backend.infrastructure.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -39,11 +40,22 @@ public class SecurityConfig {
                         .authenticationEntryPoint(authenticationEntryPoint)
                         .accessDeniedHandler(accessDeniedHandler)
                 )
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**", "/usuarios", "/v3/api-docs/**", "/swagger-ui/**" //endpoints públicos
-                        ).permitAll()
 
-                        //EndPoints das entidades protegidos
+                .authorizeHttpRequests(auth -> auth
+
+                        // 🔓 públicos
+                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/usuarios").permitAll()
+
+                        // 👤 ADMIN (controle total)
+                        .requestMatchers(HttpMethod.DELETE, "/usuarios/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/usuarios/**").hasRole("ADMIN")
+
+                        // 👥 ADMIN + GERENTE
+                        .requestMatchers(HttpMethod.GET, "/usuarios/**")
+                        .hasAnyRole("ADMIN")
+
+                        // 🔒 outros endpoints só autenticado
                         .requestMatchers(
                                 "/alertas/**",
                                 "/equipamentos/**",
@@ -51,13 +63,12 @@ public class SecurityConfig {
                                 "/fichastecnicalinsumos/**",
                                 "/insumos/**",
                                 "/relatorios/**",
-                                "/temporizadores/**",
-                                "/usuarios/**"
+                                "/temporizadores/**"
                         ).authenticated()
 
-                        //EndPoints das entidades que não foram mencionadas caso tenha
                         .anyRequest().authenticated()
                 )
+
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .httpBasic(basic -> basic.disable())
                 .formLogin(login -> login.disable());

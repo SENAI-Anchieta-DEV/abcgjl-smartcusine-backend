@@ -27,6 +27,6 @@ public class AuthService {
             throw new CredenciaisInvalidasException();
         }
 
-        return jwt.generateToken(usuario.getEmail(), usuario.getTipo().name());
+        return jwt.generateToken(usuario);
     }
 }

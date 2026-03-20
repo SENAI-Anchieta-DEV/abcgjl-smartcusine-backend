@@ -1,12 +1,14 @@
 package com.senai.abcgjl_smartcusine_backend.infrastructure.security;
 
+import com.senai.abcgjl_smartcusine_backend.domain.entity.UsuarioEntity;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-
+import java.util.Map;
+import java.util.HashMap;
 import java.security.Key;
 import java.time.Instant;
 import java.util.Date;
@@ -23,11 +25,16 @@ public class JwtService {
         this.expirationSeconds = expirationSeconds;
     }
 
-    public String generateToken(String email, String role) {
+    public String generateToken(UsuarioEntity usuario) {
         Instant now = Instant.now();
+
+        Map<String, Object> claims = new HashMap<>();
+
+        claims.put("role", usuario.getTipo().name());
+
         return Jwts.builder()
-                .setSubject(email)
-                .claim("role", role)
+                .setSubject(usuario.getEmail())
+                .claim("role", usuario.getTipo().name())
                 .setIssuedAt(Date.from(now))
                 .setExpiration(Date.from(now.plusSeconds(expirationSeconds)))
                 .signWith(key, SignatureAlgorithm.HS256)
