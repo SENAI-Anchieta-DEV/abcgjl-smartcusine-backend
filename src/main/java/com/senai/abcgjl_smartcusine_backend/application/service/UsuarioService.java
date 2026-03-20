@@ -28,6 +28,10 @@ public class UsuarioService {
 
     public UsuarioResponseDTO cadastrarUsuario(UsuarioRequestDTO dto) {
 
+        if (dto.getTipo() == null) {
+            throw new IllegalArgumentException("Tipo de usuário obrigatório");
+        }
+
         if (dto.getSenha().length() < 6) {
             throw new IllegalArgumentException("A senha deve ter pelo menos 6 caracteres");
         }
