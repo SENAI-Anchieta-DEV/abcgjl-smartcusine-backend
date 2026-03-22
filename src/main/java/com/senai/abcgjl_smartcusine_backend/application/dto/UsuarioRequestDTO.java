@@ -1,25 +1,31 @@
 package com.senai.abcgjl_smartcusine_backend.application.dto;
 
 import com.senai.abcgjl_smartcusine_backend.domain.enums.TipoUsuario;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
+
 public class UsuarioRequestDTO {
 
+    @Schema(description = "Nome completo do usuário", example = "João da Silva")
     @NotBlank(message = "O nome é obrigatório")
     @Size(min = 3, max = 100, message = "O nome deve ter entre 3 e 100 caracteres")
-    private String nome;;
+    private String nome;
 
+    @Schema(description = "Email do usuário", example = "joao@email.com")
     @NotBlank(message = "O email é obrigatório")
     @Email(message = "Email inválido")
     private String email;
 
+    @Schema(description = "Senha do usuário (mínimo 6 caracteres)", example = "123456")
     @NotBlank(message = "A senha é obrigatória")
     @Size(min = 6, message = "A senha deve ter no mínimo 6 caracteres")
     private String senha;
 
+    @Schema(description = "Tipo do usuário", example = "ADMIN")
     @NotNull(message = "O tipo de usuário é obrigatório")
     private TipoUsuario tipo;
 

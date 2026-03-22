@@ -40,7 +40,7 @@ public class SecurityConfig {
                         .accessDeniedHandler(accessDeniedHandler)
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**", "/usuarios", "/v3/api-docs/**", "/swagger-ui/**" //endpoints públicos
+                        .requestMatchers("/auth/**", "/usuarios/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/webjars/**" //endpoints públicos
                         ).permitAll()
 
                         //EndPoints das entidades protegidos
