@@ -32,7 +32,8 @@ public class UsuarioController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Usuário criado com sucesso"),
-            @ApiResponse(responseCode = "400", description = "Dados inválidos")
+            @ApiResponse(responseCode = "400", description = "Dados inválidos"),
+            @ApiResponse(responseCode = "409", description = "Email já cadastrado")
     })
     @PostMapping
     public ResponseEntity<UsuarioResponseDTO> cadastrar(
@@ -49,7 +50,11 @@ public class UsuarioController {
             summary = "Listar usuários",
             description = "Retorna todos os usuários cadastrados"
     )
-    @ApiResponse(responseCode = "200", description = "Lista retornada com sucesso")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Lista retornada com sucesso"),
+            @ApiResponse(responseCode = "401", description = "Token inválido ou ausente"),
+            @ApiResponse(responseCode = "403", description = "Usuário sem permissão")
+    })
     @GetMapping
     public ResponseEntity<List<UsuarioResponseDTO>> listar() {
         return ResponseEntity.ok(usuarioService.listarUsuarios());
@@ -61,7 +66,9 @@ public class UsuarioController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Usuário deletado com sucesso"),
-            @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
+            @ApiResponse(responseCode = "404", description = "Usuário não encontrado"),
+            @ApiResponse(responseCode = "401", description = "Token inválido ou ausente"),
+            @ApiResponse(responseCode = "403", description = "Usuário sem permissão")
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(
@@ -77,7 +84,9 @@ public class UsuarioController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Usuário encontrado"),
-            @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
+            @ApiResponse(responseCode = "404", description = "Usuário não encontrado"),
+            @ApiResponse(responseCode = "401", description = "Token inválido ou ausente"),
+            @ApiResponse(responseCode = "403", description = "Usuário sem permissão")
     })
     @GetMapping("/{id}")
     public ResponseEntity<UsuarioResponseDTO> buscarPorId(
@@ -94,7 +103,9 @@ public class UsuarioController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Usuário atualizado com sucesso"),
             @ApiResponse(responseCode = "400", description = "Dados inválidos"),
-            @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
+            @ApiResponse(responseCode = "404", description = "Usuário não encontrado"),
+            @ApiResponse(responseCode = "401", description = "Token inválido ou ausente"),
+            @ApiResponse(responseCode = "403", description = "Usuário sem permissão")
     })
     @PutMapping("/{id}")
     public ResponseEntity<UsuarioResponseDTO> atualizar(
