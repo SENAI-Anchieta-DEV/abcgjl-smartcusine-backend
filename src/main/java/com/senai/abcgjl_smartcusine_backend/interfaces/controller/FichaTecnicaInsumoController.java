@@ -4,6 +4,7 @@ import com.senai.abcgjl_smartcusine_backend.application.dto.FichaTecnicaInsumoRe
 import com.senai.abcgjl_smartcusine_backend.application.dto.FichaTecnicaInsumoResponseDTO;
 import com.senai.abcgjl_smartcusine_backend.application.service.FichaTecnicaInsumoService;
 import com.senai.abcgjl_smartcusine_backend.domain.entity.FichaTecnicaInsumoEntity;
+import com.senai.abcgjl_smartcusine_backend.interfaces.documentation.ErrorResponseSchema;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -32,7 +33,10 @@ public class FichaTecnicaInsumoController {
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Insumo adicionado com sucesso",
                     content = @Content(schema = @Schema(implementation = FichaTecnicaInsumoResponseDTO.class))),
-            @ApiResponse(responseCode = "400", description = "Dados inválidos")
+            @ApiResponse(responseCode = "400", description = "Dados inválidos",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseSchema.class)) // TODO: adicionar schema de erro
+
+            )
     })
     @PostMapping
     public ResponseEntity<FichaTecnicaInsumoResponseDTO> adicionarInsumo(
@@ -48,13 +52,35 @@ public class FichaTecnicaInsumoController {
     }
 
     @Operation(summary = "Listar todos os insumos da ficha técnica")
+    @ApiResponse(
+            responseCode = "200",
+            description = "Lista de insumos retornada com sucesso",
+            content = @Content(schema = @Schema(implementation = FichaTecnicaInsumoResponseDTO.class))
+    )
     @GetMapping
     public ResponseEntity<List<FichaTecnicaInsumoResponseDTO>> listar(){
         return ResponseEntity.ok(service.listar());
     }
 
     @Operation(summary = "Atualizar um insumo da ficha técnica")
-    @PutMapping("/{id}")
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Insumo atualizado com sucesso",
+                    content = @Content(schema = @Schema(implementation = FichaTecnicaInsumoResponseDTO.class))
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Dados inválidos",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseSchema.class)) // TODO: adicionar schema de erro
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Insumo não encontrado",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseSchema.class)) // TODO: adicionar schema de erro
+            )
+    })
+            @PutMapping("/{id}")
     public ResponseEntity<FichaTecnicaInsumoResponseDTO> atualizar(
             @PathVariable UUID id,
             @RequestBody FichaTecnicaInsumoRequestDTO dto){
@@ -63,6 +89,17 @@ public class FichaTecnicaInsumoController {
     }
 
     @Operation(summary = "Remover um insumo da ficha técnica")
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "204",
+                    description = "Insumo removido com sucesso"
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Insumo não encontrado",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseSchema.class)) // TODO: adicionar schema de erro
+            )
+    })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable UUID id){
         service.deletar(id);

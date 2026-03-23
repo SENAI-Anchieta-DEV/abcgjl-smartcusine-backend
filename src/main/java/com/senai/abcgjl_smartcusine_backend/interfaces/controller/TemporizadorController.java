@@ -2,6 +2,7 @@ package com.senai.abcgjl_smartcusine_backend.interfaces.controller;
 
 import com.senai.abcgjl_smartcusine_backend.application.dto.TemporizadorDTO;
 import com.senai.abcgjl_smartcusine_backend.application.service.TemporizadorService;
+import com.senai.abcgjl_smartcusine_backend.interfaces.documentation.ErrorResponseSchema;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -23,11 +24,14 @@ public class TemporizadorController {
     public TemporizadorController(TemporizadorService temporizadorService) {
         this.temporizadorService = temporizadorService;
     }
-    @Operation(summary = "Cria um novo temporizador") //
+    @Operation(summary = "Cria um novo temporizador")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Temporizador criado com sucesso",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = TemporizadorDTO.class))),
-            @ApiResponse(responseCode = "400", description = "Dados inválidos", content = @Content)
+                    content = @Content(schema = @Schema(implementation = TemporizadorDTO.class))
+            ),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseSchema.class))
+            )
     })
     @PostMapping
     public ResponseEntity<TemporizadorDTO> criar(@Valid @RequestBody TemporizadorDTO dto) {
@@ -38,7 +42,8 @@ public class TemporizadorController {
     @Operation(summary = "Lista todos os temporizadores") //
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Lista retornada com sucesso",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = TemporizadorDTO.class))),
+                    content = @Content(schema = @Schema(implementation = TemporizadorDTO.class))
+            )
     })
     @GetMapping
     public ResponseEntity<List<TemporizadorDTO>> listarTodos() {
@@ -48,9 +53,10 @@ public class TemporizadorController {
     @Operation(summary = "Busca um temporizador pelo ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Temporizador encontrado",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = TemporizadorDTO.class))),
-            @ApiResponse(responseCode = "404", description = "Temporizador não encontrado", content = @Content)
-    })
+                    content = @Content(schema = @Schema(implementation = TemporizadorDTO.class))
+            ),
+            @ApiResponse(responseCode = "404", description = "Temporizador não encontrado", content = @Content(schema = @Schema(implementation = ErrorResponseSchema.class))) // TODO: adicionar schema de erro
+                    })
     @GetMapping("/{id}")
     public ResponseEntity<TemporizadorDTO> buscarPorId(@PathVariable UUID id) {
         return ResponseEntity.ok(temporizadorService.buscarPorId(id));
@@ -59,9 +65,13 @@ public class TemporizadorController {
     @Operation(summary = "Atualiza um temporizador existente")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Temporizador atualizado com sucesso",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = TemporizadorDTO.class))),
-            @ApiResponse(responseCode = "404", description = "Temporizador não encontrado", content = @Content),
-            @ApiResponse(responseCode = "400", description = "Dados inválidos", content = @Content)
+                   content = @Content(schema = @Schema(implementation = TemporizadorDTO.class))),
+
+            @ApiResponse(responseCode = "404", description = "Temporizador não encontrado",
+            content = @Content(schema = @Schema(implementation = ErrorResponseSchema.class))),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseSchema.class)) // TODO: adicionar schema de erro
+            )
     })
     @PutMapping("/{id}")
     public ResponseEntity<TemporizadorDTO> atualizar(@Valid @PathVariable UUID id, @RequestBody TemporizadorDTO dto) {
@@ -71,7 +81,9 @@ public class TemporizadorController {
     @Operation(summary = "Deleta um temporizador pelo ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Temporizador deletado com sucesso", content = @Content),
-            @ApiResponse(responseCode = "404", description = "Temporizador não encontrado", content = @Content)
+            @ApiResponse(responseCode = "404", description = "Temporizador não encontrado",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseSchema.class)) // TODO: adicionar schema de erro)
+            )
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable UUID id) {
