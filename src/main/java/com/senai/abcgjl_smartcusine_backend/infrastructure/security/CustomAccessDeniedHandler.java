@@ -11,7 +11,7 @@ import java.io.IOException;
 
 @Component
 
-public class CostomAccessDeniedHandler implements AccessDeniedHandler {
+public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 
 
     @Override
