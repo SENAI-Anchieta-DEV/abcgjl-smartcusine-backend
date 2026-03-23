@@ -10,6 +10,16 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(AcessoNegadoException.class)
+    public ProblemDetail handlerAcessoNegado(AcessoNegadoException ex, HttpServletRequest request){
+        return ProblemDetailUtils.buildProblem(
+                HttpStatus.FORBIDDEN,
+                "Acesso negado.",
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+    }
+
     @ExceptionHandler(DadosInvalidosException.class)
     public ProblemDetail handlerDadosInvalidos (DadosInvalidosException ex, HttpServletRequest request){
         return ProblemDetailUtils.buildProblem(

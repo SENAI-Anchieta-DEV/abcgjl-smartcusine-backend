@@ -4,14 +4,16 @@ import com.senai.abcgjl_smartcusine_backend.application.dto.UsuarioRequestDTO;
 import com.senai.abcgjl_smartcusine_backend.application.dto.UsuarioResponseDTO;
 import com.senai.abcgjl_smartcusine_backend.application.mapper.UsuarioMapper;
 import com.senai.abcgjl_smartcusine_backend.domain.entity.UsuarioEntity;
+import com.senai.abcgjl_smartcusine_backend.domain.enums.TipoUsuario;
 import com.senai.abcgjl_smartcusine_backend.domain.exception.EmailJaCadastradoException;
 import com.senai.abcgjl_smartcusine_backend.domain.exception.UsuarioNaoEncontradoException;
 import com.senai.abcgjl_smartcusine_backend.domain.repository.UsuarioRepository;
+import com.senai.abcgjl_smartcusine_backend.interfaces.exception.AcessoNegadoException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
-
+import org.springframework.security.core.context.SecurityContextHolder;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,12 +23,25 @@ public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder encoder;
 
+    private UsuarioEntity getUsuarioLogado() {
+        String email = SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getName();
+
+        return usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new UsuarioNaoEncontradoException());
+    }
+
     public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder encoder) {
         this.usuarioRepository = usuarioRepository;
         this.encoder = encoder;
     }
 
     public UsuarioResponseDTO cadastrarUsuario(UsuarioRequestDTO dto) {
+
+        if (dto.getTipo() == null) {
+            throw new IllegalArgumentException("Tipo de usuário obrigatório");
+        }
 
         if (dto.getSenha().length() < 6) {
             throw new IllegalArgumentException("A senha deve ter pelo menos 6 caracteres");
@@ -55,8 +70,16 @@ public class UsuarioService {
 
     public void deletarUsuario(Long id) {
 
+        UsuarioEntity usuarioLogado = getUsuarioLogado();
+
         UsuarioEntity usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new UsuarioNaoEncontradoException());
+
+        if (usuarioLogado.getTipo() == TipoUsuario.GERENTE &&
+                usuario.getTipo() == TipoUsuario.ADMIN) {
+
+            throw new AcessoNegadoException("Gerente não pode deletar ADMIN");
+        }
 
         usuarioRepository.delete(usuario);
     }
@@ -71,13 +94,16 @@ public class UsuarioService {
 
     public UsuarioResponseDTO atualizarUsuario(Long id, UsuarioRequestDTO dto) {
 
+        UsuarioEntity usuarioLogado = getUsuarioLogado();
+
         UsuarioEntity usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new UsuarioNaoEncontradoException());
 
-        // verifica se o email já existe em outro usuário
-        if (usuarioRepository.findByEmail(dto.getEmail()).isPresent() &&
-                !usuario.getEmail().equals(dto.getEmail())) {
-            throw new EmailJaCadastradoException();
+        // 🔒 REGRA DE NEGÓCIO
+        if (usuarioLogado.getTipo() == TipoUsuario.GERENTE &&
+                usuario.getTipo() == TipoUsuario.ADMIN) {
+
+            throw new AcessoNegadoException("Gerente não pode alterar ADMIN");
         }
 
         usuario.setNome(dto.getNome());
