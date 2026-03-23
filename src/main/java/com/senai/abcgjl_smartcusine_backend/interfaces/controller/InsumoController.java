@@ -3,6 +3,7 @@ package com.senai.abcgjl_smartcusine_backend.interfaces.controller;
 import com.senai.abcgjl_smartcusine_backend.application.dto.InsumoRequestDTO;
 import com.senai.abcgjl_smartcusine_backend.application.dto.InsumoResponseDTO;
 import com.senai.abcgjl_smartcusine_backend.application.service.InsumoService;
+import com.senai.abcgjl_smartcusine_backend.interfaces.documentation.ErrorResponseSchema;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -31,7 +32,9 @@ public class InsumoController {
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Insumo criado com sucesso",
                     content = @Content(schema = @Schema(implementation = InsumoResponseDTO.class))),
-            @ApiResponse(responseCode = "400", description = "Requisição inválida")
+            @ApiResponse(responseCode = "400", description = "Requisição inválida",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseSchema.class)) // TODO: adicionar schema de erro
+            )
     })
         @PostMapping
     public ResponseEntity<InsumoResponseDTO> criar(
@@ -56,7 +59,9 @@ public class InsumoController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Insumo encontrado",
                     content = @Content(schema = @Schema(implementation = InsumoResponseDTO.class))),
-            @ApiResponse(responseCode = "404", description = "Insumo não encontrado")
+            @ApiResponse(responseCode = "404", description = "Insumo não encontrado",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseSchema.class)) // TODO: adicionar schema de erro
+            )
     })
     @GetMapping("/{id}")
     public ResponseEntity<InsumoResponseDTO> buscarPorId(
@@ -70,8 +75,10 @@ public class InsumoController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Insumo atualizado com sucesso",
                     content = @Content(schema = @Schema(implementation = InsumoResponseDTO.class))),
-            @ApiResponse(responseCode = "400", description = "Dados inválidos"),
-            @ApiResponse(responseCode = "404", description = "Insumo não encontrado")
+            @ApiResponse(responseCode = "400", description = "Dados inválidos",  content = @Content(schema = @Schema(implementation = ErrorResponseSchema.class)) // TODO: adicionar schema de erro
+            ),
+            @ApiResponse(responseCode = "404", description = "Insumo não encontrado",  content = @Content(schema = @Schema(implementation = ErrorResponseSchema.class)) // TODO: adicionar schema de erro
+            )
     })
     @PutMapping("/{id}")
     public ResponseEntity<InsumoResponseDTO> atualizar(
@@ -84,7 +91,8 @@ public class InsumoController {
     @Operation(summary = "Deleta um insumo por ID")
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "Insumo deletado com sucesso"),
-            @ApiResponse(responseCode = "404", description = "Insumo não encontrado")
+            @ApiResponse(responseCode = "404", description = "Insumo não encontrado",  content = @Content(schema = @Schema(implementation = ErrorResponseSchema.class)) // TODO: adicionar schema de erro
+            )
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(
