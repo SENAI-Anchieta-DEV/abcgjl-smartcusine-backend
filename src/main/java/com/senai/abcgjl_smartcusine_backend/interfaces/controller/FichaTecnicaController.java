@@ -3,6 +3,7 @@ package com.senai.abcgjl_smartcusine_backend.interfaces.controller;
 import com.senai.abcgjl_smartcusine_backend.application.dto.FichaTecnicaRequestDTO;
 import com.senai.abcgjl_smartcusine_backend.application.dto.FichaTecnicaResponseDTO;
 import com.senai.abcgjl_smartcusine_backend.application.service.FichaTecnicaService;
+import com.senai.abcgjl_smartcusine_backend.interfaces.documentation.ErrorResponseSchema;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -33,8 +34,12 @@ public class FichaTecnicaController {
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Ficha técnica criada com sucesso",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = FichaTecnicaResponseDTO.class))),
-            @ApiResponse(responseCode = "400", description = "Dados inválidos"),
-            @ApiResponse(responseCode = "403", description = "Acesso negado")
+            @ApiResponse(responseCode = "400", description = "Dados inválidos",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseSchema.class))
+            ),
+            @ApiResponse(responseCode = "403", description = "Acesso negado",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseSchema.class))
+            )
     })
     @PostMapping
     public ResponseEntity<FichaTecnicaResponseDTO> criar(
@@ -61,8 +66,14 @@ public class FichaTecnicaController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Ficha técnica atualizada com sucesso",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = FichaTecnicaResponseDTO.class))),
-            @ApiResponse(responseCode = "404", description = "Ficha técnica não encontrada"),
-            @ApiResponse(responseCode = "403", description = "Acesso negado")
+            @ApiResponse(responseCode = "404", description = "Ficha técnica não encontrada",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseSchema.class)) // TODO: adicionar schema de erro
+
+            ),
+            @ApiResponse(responseCode = "403", description = "Acesso negado",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseSchema.class)) // TODO: adicionar schema de erro
+
+            )
     })
     @PutMapping("/{id}")
     public ResponseEntity<FichaTecnicaResponseDTO> atualizar(
@@ -75,8 +86,14 @@ public class FichaTecnicaController {
     @Operation(summary = "Deletar ficha técnica", description = "Deleta uma ficha técnica existente. Apenas ADMIN pode deletar.") // <-- adicionar
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "Ficha técnica deletada com sucesso"),
-            @ApiResponse(responseCode = "404", description = "Ficha técnica não encontrada"),
-            @ApiResponse(responseCode = "403", description = "Acesso negado")
+            @ApiResponse(responseCode = "404", description = "Ficha técnica não encontrada",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseSchema.class)) // TODO: adicionar schema de erro
+
+            ),
+            @ApiResponse(responseCode = "403", description = "Acesso negado",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseSchema.class)) // TODO: adicionar schema de erro
+
+            )
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable UUID id) {
