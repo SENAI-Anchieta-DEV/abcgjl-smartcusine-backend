@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Positive;
 import java.util.UUID;
 
 public record TemporizadorDTO(
-        @Schema(description = "ID do temporizador", example = "3fa85f64-5717-4562-b3fc-2c963f66afa6")
+        @Schema(description = "ID do temporizador", example = "3fa85f64-5717-4562-b3fc-2c963f66afa6", required = true)
         UUID idTemporizador,
 
         @NotNull(message = "O tempo configurado não pode ser nulo")
@@ -20,7 +20,7 @@ public record TemporizadorDTO(
         @Schema(description = "Tempo atual do temporizador em minutos", example = "15", required = true)
         Integer tempoAtual,
 
-        @Schema(description = "ID do equipamento associado", example = "3fa85f64-5717-4562-b3fc-2c963f66afa7")
+        @Schema(description = "ID do equipamento associado", example = "3fa85f64-5717-4562-b3fc-2c963f66afa7", required = true)
         UUID equipamentoId
 ) {
 }
