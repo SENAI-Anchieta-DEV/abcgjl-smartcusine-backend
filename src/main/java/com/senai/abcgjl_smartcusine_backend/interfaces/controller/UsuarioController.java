@@ -4,13 +4,10 @@ import com.senai.abcgjl_smartcusine_backend.application.dto.UsuarioRequestDTO;
 import com.senai.abcgjl_smartcusine_backend.application.dto.UsuarioResponseDTO;
 import com.senai.abcgjl_smartcusine_backend.application.service.UsuarioService;
 import com.senai.abcgjl_smartcusine_backend.domain.entity.UsuarioEntity;
-import com.senai.abcgjl_smartcusine_backend.interfaces.documentation.ErrorResponseSchema;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -34,19 +31,9 @@ public class UsuarioController {
             description = "Cria um novo usuário no sistema"
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201",
-                    description = "Usuário criado com sucesso",
-                    content = @Content(schema = @Schema(implementation = UsuarioResponseDTO.class))
-            ),
-            @ApiResponse(responseCode = "400",
-                    description = "Dados inválidos",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseSchema.class))
-            ),
-            @ApiResponse(
-                    responseCode = "409",
-                    description = "Email já cadastrado",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseSchema.class))
-            )
+            @ApiResponse(responseCode = "201", description = "Usuário criado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos"),
+            @ApiResponse(responseCode = "409", description = "Email já cadastrado")
     })
     @PostMapping
     public ResponseEntity<UsuarioResponseDTO> cadastrar(
@@ -63,10 +50,11 @@ public class UsuarioController {
             summary = "Listar usuários",
             description = "Retorna todos os usuários cadastrados"
     )
-    @ApiResponse(responseCode = "200", description = "Lista retornada com sucesso"
-    , content = @Content(schema = @Schema(implementation = UsuarioResponseDTO.class))
-    )
-
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Lista retornada com sucesso"),
+            @ApiResponse(responseCode = "401", description = "Token inválido ou ausente"),
+            @ApiResponse(responseCode = "403", description = "Usuário sem permissão")
+    })
     @GetMapping
     public ResponseEntity<List<UsuarioResponseDTO>> listar() {
         return ResponseEntity.ok(usuarioService.listarUsuarios());
@@ -78,9 +66,9 @@ public class UsuarioController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Usuário deletado com sucesso"),
-            @ApiResponse(responseCode = "404", description = "Usuário não encontrado",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseSchema.class))
-            )
+            @ApiResponse(responseCode = "404", description = "Usuário não encontrado"),
+            @ApiResponse(responseCode = "401", description = "Token inválido ou ausente"),
+            @ApiResponse(responseCode = "403", description = "Usuário sem permissão")
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(
@@ -95,13 +83,10 @@ public class UsuarioController {
             description = "Retorna um usuário específico pelo ID"
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Usuário encontrado",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseSchema.class))
-            ),
-
-            @ApiResponse(responseCode = "404", description = "Usuário não encontrado",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseSchema.class))
-            )
+            @ApiResponse(responseCode = "200", description = "Usuário encontrado"),
+            @ApiResponse(responseCode = "404", description = "Usuário não encontrado"),
+            @ApiResponse(responseCode = "401", description = "Token inválido ou ausente"),
+            @ApiResponse(responseCode = "403", description = "Usuário sem permissão")
     })
     @GetMapping("/{id}")
     public ResponseEntity<UsuarioResponseDTO> buscarPorId(
@@ -116,11 +101,11 @@ public class UsuarioController {
             description = "Atualiza os dados de um usuário existente"
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Usuário atualizado com sucesso",
-                    content = @Content(schema = @Schema(implementation = UsuarioResponseDTO.class))
-            ),
+            @ApiResponse(responseCode = "200", description = "Usuário atualizado com sucesso"),
             @ApiResponse(responseCode = "400", description = "Dados inválidos"),
-            @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
+            @ApiResponse(responseCode = "404", description = "Usuário não encontrado"),
+            @ApiResponse(responseCode = "401", description = "Token inválido ou ausente"),
+            @ApiResponse(responseCode = "403", description = "Usuário sem permissão")
     })
     @PutMapping("/{id}")
     public ResponseEntity<UsuarioResponseDTO> atualizar(

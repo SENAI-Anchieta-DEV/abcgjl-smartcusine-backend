@@ -9,15 +9,15 @@ import java.util.UUID;
 public record FichaTecnicaInsumoRequestDTO(
 
         @NotNull(message = "O ID da ficha técnica é obrigatório")
-        @Schema(description = "ID da ficha técnica", example = "550e8400-e29b-41d4-a716-446655440000")
+        @Schema(description = "ID da ficha técnica", example = "550e8400-e29b-41d4-a716-446655440000", required = true)
         UUID fichaTecnicaId,
 
         @NotNull(message = "O ID do insumo é obrigatório")
-        @Schema(description = "ID do insumo", example = "660e8400-e29b-41d4-a716-446655440111")
+        @Schema(description = "ID do insumo", example = "660e8400-e29b-41d4-a716-446655440111", required = true)
         UUID insumoId,
 
         @NotNull(message = "A quantidade é obrigatória")
         @Positive(message = "A quantidade deve ser maior que zero")
-        @Schema(description = "Quantidade do insumo na ficha técnica", example = "5")
+        @Schema(description = "Quantidade do insumo na ficha técnica", example = "5", required = true)
         Double quantidade
 ) {}

@@ -10,22 +10,22 @@ import jakarta.validation.constraints.Size;
 
 public class UsuarioRequestDTO {
 
-    @Schema(description = "Nome completo do usuário", example = "João da Silva")
+    @Schema(description = "Nome completo do usuário", example = "João da Silva",  required = true)
     @NotBlank(message = "O nome é obrigatório")
     @Size(min = 3, max = 100, message = "O nome deve ter entre 3 e 100 caracteres")
     private String nome;
 
-    @Schema(description = "Email do usuário", example = "joao@email.com")
+    @Schema(description = "Email do usuário", example = "joao@email.com",  required = true)
     @NotBlank(message = "O email é obrigatório")
     @Email(message = "Email inválido")
     private String email;
 
-    @Schema(description = "Senha do usuário (mínimo 6 caracteres)", example = "123456")
+    @Schema(description = "Senha do usuário (mínimo 6 caracteres)", example = "123456",  required = true)
     @NotBlank(message = "A senha é obrigatória")
     @Size(min = 6, message = "A senha deve ter no mínimo 6 caracteres")
     private String senha;
 
-    @Schema(description = "Tipo do usuário", example = "ADMIN")
+    @Schema(description = "Tipo do usuário (ADMIN, GERENTE, COZINHEIRO)", example = "ADMIN", required = true )
     @NotNull(message = "O tipo de usuário é obrigatório")
     private TipoUsuario tipo;
 

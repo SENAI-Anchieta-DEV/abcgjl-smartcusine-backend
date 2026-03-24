@@ -8,18 +8,18 @@ public class AuthDTO {
     public record LoginRequest(
 
 
-            @Schema(description = "E-mail de login", example = "exemplo@gmail.com")
+            @Schema(description = "E-mail de login", example = "exemplo@gmail.com", required = true)
             @NotBlank(message = "O email é obrigatório")
             @Email(message = "Email inválido")
             String email,
 
 
-            @Schema(description = "Senha para login", example = "123456")
+            @Schema(description = "Senha para login", example = "123456", required = true)
             @NotBlank(message = "A senha é obrigatória")
             String senha,
 
 
-            @Schema(description = "Tipo de usuário", example = "Cozinheiro")
+            @Schema(description = "Tipo de usuário", example = "Cozinheiro", required = true)
             @NotBlank(message = "O tipo de usuário é obrigatório")
             String tipoUsuario
     ) {}
