@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: carteirinha-digital-backend-api
+    name: abcgjl-smartcusine-backend-api
     runtime: docker
     plan: free
     autoDeployTrigger: commit
@@ -11,23 +11,23 @@ services:
         value: prod
       - key: DATABASE_HOST
         fromDatabase:
-          name: carteirinha-digital-backend-db
+          name: abcgjl-smartcusine-backend-db
           property: host
       - key: DATABASE_PORT
         fromDatabase:
-          name: carteirinha-digital-backend-db
+          name: abcgjl-smartcusine-backend-db
           property: port
       - key: DATABASE_NAME
         fromDatabase:
-          name: carteirinha-digital-backend-db
+          name: abcgjl-smartcusine-backend-db
           property: database
       - key: DATABASE_USER
         fromDatabase:
-          name: carteirinha-digital-backend-db
+          name: abcgjl-smartcusine-backend-db
           property: user
       - key: DATABASE_PASSWORD
         fromDatabase:
-          name: carteirinha-digital-backend-db
+          name: abcgjl-smartcusine-backend-db
           property: password
       - key: SECURITY_JWT_SECRET
         generateValue: true
@@ -41,25 +41,26 @@ services:
         sync: false
       - key: APP_BOOTSTRAP_ADMIN_PASSWORD
         sync: false
-      - key: APP_STORAGE_PROVIDER
-        value: firebase
-      - key: APP_STORAGE_LOCAL_BASE_PATH
-        value: uploads
-      - key: APP_STORAGE_LOCAL_PUBLIC_PATH
-        value: /uploads
-      - key: APP_STORAGE_FIREBASE_BUCKET
-        sync: false
-      - key: APP_STORAGE_FIREBASE_PROJECT_ID
-        sync: false
-      - key: APP_STORAGE_FIREBASE_CREDENTIALS_BASE64
-        sync: false
-      - key: APP_STORAGE_FIREBASE_CREDENTIALS_JSON
-        sync: false
-      - key: APP_STORAGE_FIREBASE_FOLDER
-        value: uploads
+
+      #- key: APP_STORAGE_PROVIDER
+        #value: firebase
+      #- key: APP_STORAGE_LOCAL_BASE_PATH
+       # value: uploads
+      #- key: APP_STORAGE_LOCAL_PUBLIC_PATH
+       # value: /uploads
+      #- key: APP_STORAGE_FIREBASE_BUCKET
+       # sync: false
+      #- key: APP_STORAGE_FIREBASE_PROJECT_ID
+        #sync: false
+      #- key: APP_STORAGE_FIREBASE_CREDENTIALS_BASE64
+       # sync: false
+      #- key: APP_STORAGE_FIREBASE_CREDENTIALS_JSON
+       # sync: false
+      #- key: APP_STORAGE_FIREBASE_FOLDER
+      #  value: uploads
 
 databases:
-  - name: carteirinha-digital-backend-db
-    databaseName: carteirinha_digital_backend
-    user: carteirinha_digital_backend
+  - name: abcgjl-smartcusine-backend-db
+    databaseName: abcgjl_smartcusine_backend
+    user: abcgjl_smartcusine_backend
     plan: free
