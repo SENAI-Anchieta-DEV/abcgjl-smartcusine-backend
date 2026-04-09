@@ -1,5 +1,19 @@
+-- =========================
 -- EXTENSÃO PARA UUID
+-- =========================
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+
+-- =========================
+-- DROP DAS TABELAS (SEGURA)
+-- =========================
+DROP TABLE IF EXISTS ficha_tecnica_insumos CASCADE;
+DROP TABLE IF EXISTS alertas CASCADE;
+DROP TABLE IF EXISTS temporizadores CASCADE;
+DROP TABLE IF EXISTS equipamentos CASCADE;
+DROP TABLE IF EXISTS relatorios CASCADE;
+DROP TABLE IF EXISTS insumos CASCADE;
+DROP TABLE IF EXISTS fichas_tecnicas CASCADE;
+DROP TABLE IF EXISTS usuarios CASCADE;
 
 -- =========================
 -- USUARIOS
@@ -40,7 +54,7 @@ CREATE TABLE insumos (
 CREATE TABLE relatorios (
                             id_relatorio UUID PRIMARY KEY DEFAULT gen_random_uuid(),
                             tipo VARCHAR(100),
-                            data VARCHAR(50)
+                            data TIMESTAMP
 );
 
 -- =========================
