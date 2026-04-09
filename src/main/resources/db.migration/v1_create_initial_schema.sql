@@ -1,62 +1,107 @@
-CREATE DATABASE cuisine;
-USE cuisine;
+-- EXTENSÃO PARA UUID
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
-CREATE TABLE Usuario (
-                         idUsuario INT AUTO_INCREMENT PRIMARY KEY,
-                         nome VARCHAR(100) NOT NULL,
-                         cpf VARCHAR(14) NOT NULL UNIQUE,
-                         email VARCHAR(150) NOT NULL UNIQUE,
-                         senha VARCHAR(255) NOT NULL,
-                         tipoUsuario VARCHAR(30) NOT NULL
+-- =========================
+-- USUARIOS
+-- =========================
+CREATE TABLE usuarios (
+                          id BIGSERIAL PRIMARY KEY,
+                          nome VARCHAR(120) NOT NULL,
+                          email VARCHAR(150) NOT NULL UNIQUE,
+                          senha VARCHAR(255) NOT NULL,
+                          tipo VARCHAR(50) NOT NULL
 );
 
-CREATE TABLE FichaTecnica (
-                              idFicha INT AUTO_INCREMENT PRIMARY KEY,
-                              nomePreparo VARCHAR(100) NOT NULL,
-                              temperaturaMin DECIMAL(5,2) NOT NULL,
-                              temperaturaMax DECIMAL(5,2) NOT NULL,
-                              tempoIdeal INT NOT NULL,
-                              tolerancia INT NOT NULL DEFAULT 0,
-                              codigoQR VARCHAR(255) UNIQUE
+-- =========================
+-- FICHAS TECNICAS
+-- =========================
+CREATE TABLE fichas_tecnicas (
+                                 id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+                                 nome_preparo VARCHAR(255),
+                                 tempo_ideal VARCHAR(50),
+                                 temperatura_ideal DOUBLE PRECISION
 );
 
-CREATE TABLE Equipamento (
-                             idEquipamento INT AUTO_INCREMENT PRIMARY KEY,
-                             nome VARCHAR(100) NOT NULL,
-                             tipoEquipamento VARCHAR(70) NOT NULL,
-                             statusEquipamento VARCHAR(30) NOT NULL,
-                             temperaturaAtual DECIMAL(5,2)
+-- =========================
+-- INSUMOS
+-- =========================
+CREATE TABLE insumos (
+                         id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+                         nome VARCHAR(255),
+                         unidade_medida VARCHAR(50),
+                         quantidade_estoque DOUBLE PRECISION,
+                         data_validade DATE,
+                         qr_code VARCHAR(255)
 );
 
-CREATE TABLE ProcessoPreparo (
-                                 idProcesso INT AUTO_INCREMENT PRIMARY KEY,
-                                 idEquipamento INT NOT NULL,
-                                 idFicha INT NOT NULL,
-                                 statusPreparo VARCHAR(30) NOT NULL,
-                                 tempoDecorrido INT NOT NULL,
-                                 temperaturaAtual DECIMAL(5,2),
-                                 FOREIGN KEY (idEquipamento) REFERENCES Equipamento(idEquipamento) ON DELETE CASCADE,
-                                 FOREIGN KEY (idFicha) REFERENCES FichaTecnica(idFicha) ON DELETE CASCADE
+-- =========================
+-- RELATORIOS
+-- =========================
+CREATE TABLE relatorios (
+                            id_relatorio UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+                            tipo VARCHAR(100),
+                            data VARCHAR(50)
 );
 
-CREATE TABLE Insumo (
-                        idInsumo INT AUTO_INCREMENT PRIMARY KEY,
-                        nome VARCHAR(100) NOT NULL,
-                        dataFabricacao DATE NOT NULL,
-                        dataValidade DATE NOT NULL,
-                        statusInsumo VARCHAR(30) NOT NULL,
-                        codigoQR VARCHAR(255) UNIQUE,
-                        idUsuario INT NOT NULL,
-                        FOREIGN KEY (idUsuario) REFERENCES Usuario(idUsuario) ON DELETE CASCADE
+-- =========================
+-- EQUIPAMENTOS
+-- =========================
+CREATE TABLE equipamentos (
+                              id_equipamento UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+                              tipo VARCHAR(100),
+                              temperatura_atual DOUBLE PRECISION,
+                              temperatura_ideal DOUBLE PRECISION,
+                              ficha_tecnica_id UUID UNIQUE,
+                              CONSTRAINT fk_ficha_tecnica
+                                  FOREIGN KEY (ficha_tecnica_id)
+                                      REFERENCES fichas_tecnicas(id)
 );
 
-CREATE TABLE Alerta (
-                        idAlerta INT AUTO_INCREMENT PRIMARY KEY,
-                        tipo VARCHAR(50) NOT NULL,
-                        nivelSeveridade VARCHAR(20) NOT NULL,
-                        mensagem TEXT,
-                        idProcesso INT NULL,
-                        idInsumo INT NULL,
-                        FOREIGN KEY (idProcesso) REFERENCES ProcessoPreparo(idProcesso) ON DELETE CASCADE,
-                        FOREIGN KEY (idInsumo) REFERENCES Insumo(idInsumo) ON DELETE CASCADE
+-- =========================
+-- TEMPORIZADORES
+-- =========================
+CREATE TABLE temporizadores (
+                                id_temporizador UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+                                tempo_configurado INT,
+                                tempo_atual INT,
+                                equipamento_id UUID UNIQUE,
+                                CONSTRAINT fk_equipamento_temp
+                                    FOREIGN KEY (equipamento_id)
+                                        REFERENCES equipamentos(id_equipamento)
+);
+
+-- =========================
+-- ALERTAS
+-- =========================
+CREATE TABLE alertas (
+                         id_alerta UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+                         tipo VARCHAR(100),
+                         mensagem TEXT,
+                         equipamento_id UUID,
+                         temporizador_id UUID,
+                         CONSTRAINT fk_alerta_equipamento
+                             FOREIGN KEY (equipamento_id)
+                                 REFERENCES equipamentos(id_equipamento),
+                         CONSTRAINT fk_alerta_temporizador
+                             FOREIGN KEY (temporizador_id)
+                                 REFERENCES temporizadores(id_temporizador)
+);
+
+-- =========================
+-- RELAÇÃO FICHA TECNICA x INSUMO
+-- =========================
+CREATE TABLE ficha_tecnica_insumos (
+                                       id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+                                       ficha_tecnica_id UUID NOT NULL,
+                                       insumo_id UUID NOT NULL,
+                                       quantidade DOUBLE PRECISION,
+                                       unidade VARCHAR(50),
+
+                                       CONSTRAINT fk_ficha
+                                           FOREIGN KEY (ficha_tecnica_id)
+                                               REFERENCES fichas_tecnicas(id),
+
+                                       CONSTRAINT fk_insumo
+                                           FOREIGN KEY (insumo_id)
+                                               REFERENCES insumos(id)
 );
