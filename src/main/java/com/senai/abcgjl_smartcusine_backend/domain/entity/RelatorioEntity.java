@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import java.time.LocalDateTime;
 
 import java.util.UUID;
 
@@ -19,6 +20,6 @@ public class RelatorioEntity {
     private UUID idRelatorio;
 
     private String tipo;
-    private String data;
+    private LocalDateTime data;
 
 }
