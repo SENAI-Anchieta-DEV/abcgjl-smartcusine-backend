@@ -11,23 +11,23 @@ services:
         value: prod
       - key: DATABASE_HOST
         fromDatabase:
-          name: abcgjl-smartcusine-backend-db
+          name: abcgjl-smartcusine-backend
           property: host
       - key: DATABASE_PORT
         fromDatabase:
-          name: abcgjl-smartcusine-backend-db
+          name: abcgjl-smartcusine-backend
           property: port
       - key: DATABASE_NAME
         fromDatabase:
-          name: abcgjl-smartcusine-backend-db
+          name: abcgjl-smartcusine-backend
           property: database
       - key: DATABASE_USER
         fromDatabase:
-          name: abcgjl-smartcusine-backend-db
+          name: abcgjl-smartcusine-backend
           property: user
       - key: DATABASE_PASSWORD
         fromDatabase:
-          name: abcgjl-smartcusine-backend-db
+          name: abcgjl-smartcusine-backend
           property: password
       - key: SECURITY_JWT_SECRET
         generateValue: true
@@ -60,7 +60,7 @@ services:
       #  value: uploads
 
 databases:
-  - name: abcgjl-smartcusine-backend-db
+  - name: abcgjl-smartcusine-backend
     databaseName: abcgjl_smartcusine_backend
     user: abcgjl_smartcusine_backend
     plan: free
