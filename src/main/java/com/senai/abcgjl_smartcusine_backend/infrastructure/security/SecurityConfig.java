@@ -22,11 +22,13 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final AuthenticationEntryPoint authenticationEntryPoint;
     private final AccessDeniedHandler accessDeniedHandler;
+    private final CorsProperties corsProperties;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
 
                 .sessionManagement(session ->
@@ -39,26 +41,8 @@ public class SecurityConfig {
                 )
 
                 .authorizeHttpRequests(auth -> auth
-                        // públicos
-                        .requestMatchers(
-                                "/auth/**",
-                                "/v3/api-docs",
-                                "/v3/api-docs/**",
-                                "/swagger-ui/**",
-                                "/swagger-ui.html",
-                                "/webjars/**",
-                                "/actuator/**",
-                                "/healthz"
-                        ).permitAll()
 
-                        .requestMatchers(HttpMethod.POST, "/usuarios").permitAll()
-
-                        // admin
-                        .requestMatchers(HttpMethod.DELETE, "/usuarios/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/usuarios/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/usuarios/**").hasRole("ADMIN")
-
-                        // autenticado
+                        // PÚBLICOS (Swagger + auth + health)
                         .requestMatchers(
                                 "/auth/**",
                                 "/v3/api-docs",
@@ -71,6 +55,15 @@ public class SecurityConfig {
                                 "/error"
                         ).permitAll()
 
+                        //  criar usuário
+                        .requestMatchers(HttpMethod.POST, "/usuarios").permitAll()
+
+                        //  ADMIN
+                        .requestMatchers(HttpMethod.DELETE, "/usuarios/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/usuarios/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/usuarios/**").hasRole("ADMIN")
+
+                        //  resto precisa de login
                         .anyRequest().authenticated()
                 )
 
@@ -84,5 +77,19 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedOrigins(corsProperties.getAllowedOrigins());
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedHeaders(List.of("*"));
+        config.setAllowCredentials(true);
+        config.setMaxAge(3600L);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
     }
 }

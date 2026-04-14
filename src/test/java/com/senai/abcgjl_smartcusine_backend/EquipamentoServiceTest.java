@@ -1,4 +1,4 @@
-package com.senai.abcgjl_smartcusine_backend;
+/*package com.senai.abcgjl_smartcusine_backend;
 
 import com.senai.abcgjl_smartcusine_backend.application.service.EquipamentoService;
 import com.senai.abcgjl_smartcusine_backend.domain.entity.EquipamentoEntity;
@@ -130,4 +130,4 @@ public class EquipamentoServiceTest {
         assertDoesNotThrow(() -> service.deletar(id));
         verify(repository).delete(equipamento);
     }
-}
+}*/

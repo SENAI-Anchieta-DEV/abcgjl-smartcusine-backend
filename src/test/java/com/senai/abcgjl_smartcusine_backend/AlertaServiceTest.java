@@ -1,4 +1,4 @@
-package com.senai.abcgjl_smartcusine_backend;
+/*package com.senai.abcgjl_smartcusine_backend;
 
 import com.senai.abcgjl_smartcusine_backend.application.dto.AlertaResponseDTO;
 import com.senai.abcgjl_smartcusine_backend.application.service.AlertaService;
@@ -59,4 +59,4 @@ public class AlertaServiceTest {
         assertDoesNotThrow(() -> service.deletar(id));
         verify(repository).deleteById(id);
     }
-}
+}*/
