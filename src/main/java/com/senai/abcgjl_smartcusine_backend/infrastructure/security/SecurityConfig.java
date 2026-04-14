@@ -60,14 +60,16 @@ public class SecurityConfig {
 
                         // autenticado
                         .requestMatchers(
-                                "/alerta/**",
-                                "/equipamentos/**",
-                                "/fichas-tecnicas/**",
-                                "/ficha-tecnica-insumos/**",
-                                "/insumos/**",
-                                "/relatorios/**",
-                                "/temporizadores/**"
-                        ).authenticated()
+                                "/auth/**",
+                                "/v3/api-docs",
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/webjars/**",
+                                "/actuator/**",
+                                "/healthz",
+                                "/error"
+                        ).permitAll()
 
                         .anyRequest().authenticated()
                 )
