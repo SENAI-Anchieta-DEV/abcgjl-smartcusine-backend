@@ -19,6 +19,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 public class FichaTecnicaInsumoServiceTest {
+
     private FichaTecnicaInsumoRepository relacaoRepository;
     private FichaTecnicaRepository fichaRepository;
     private InsumoRepository insumoRepository;
@@ -48,9 +49,22 @@ public class FichaTecnicaInsumoServiceTest {
         });
     }
 
-    // ❌ RELAÇÃO JÁ EXISTE
+// Adicionar: Quantidade null
+
+    @Test
+    void deveFalharQuandoQuantidadeForNula() {
+
+        UUID fichaId = UUID.randomUUID();
+        UUID insumoId = UUID.randomUUID();
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            service.adicionarInsumo(fichaId, insumoId, null);
+        });
+    }
+    // RELAÇÃO JÁ EXISTE
     @Test
     void deveFalharQuandoInsumoJaExisteNaFicha() {
+
         UUID fichaId = UUID.randomUUID();
         UUID insumoId = UUID.randomUUID();
 
@@ -65,6 +79,7 @@ public class FichaTecnicaInsumoServiceTest {
     // ❌ FICHA NÃO EXISTE
     @Test
     void deveFalharQuandoFichaNaoExiste() {
+
         UUID fichaId = UUID.randomUUID();
         UUID insumoId = UUID.randomUUID();
 
@@ -82,6 +97,7 @@ public class FichaTecnicaInsumoServiceTest {
     // ❌ INSUMO NÃO EXISTE
     @Test
     void deveFalharQuandoInsumoNaoExiste() {
+
         UUID fichaId = UUID.randomUUID();
         UUID insumoId = UUID.randomUUID();
 
@@ -104,6 +120,7 @@ public class FichaTecnicaInsumoServiceTest {
     // ✅ ADICIONAR COM SUCESSO
     @Test
     void deveAdicionarInsumoComSucesso() {
+
         UUID fichaId = UUID.randomUUID();
         UUID insumoId = UUID.randomUUID();
 
@@ -126,7 +143,12 @@ public class FichaTecnicaInsumoServiceTest {
                 service.adicionarInsumo(fichaId, insumoId, 5.0);
 
         assertNotNull(result);
+
         verify(relacaoRepository).save(any());
+
+        verify(relacaoRepository).existsByFichaTecnicaIdAndInsumoId(fichaId, insumoId);
+        verify(fichaRepository).findById(fichaId);
+        verify(insumoRepository).findById(insumoId);
     }
 
     // ✅ LISTAR
@@ -140,8 +162,8 @@ public class FichaTecnicaInsumoServiceTest {
         ficha.setNomePreparo("Arroz branco");
 
         FichaTecnicaInsumoEntity entity = new FichaTecnicaInsumoEntity();
-        entity.setInsumo(insumo);              // 👈 obrigatório
-        entity.setFichaTecnica(ficha);        // 👈 obrigatório
+        entity.setInsumo(insumo);
+        entity.setFichaTecnica(ficha);
         entity.setQuantidade(2.0);
 
         when(relacaoRepository.findAll())
@@ -150,6 +172,8 @@ public class FichaTecnicaInsumoServiceTest {
         List<FichaTecnicaInsumoResponseDTO> lista = service.listar();
 
         assertFalse(lista.isEmpty());
+
+        assertEquals(1, lista.size());
     }
 
     // ❌ ATUALIZAR QUANTIDADE INVÁLIDA
@@ -197,8 +221,8 @@ public class FichaTecnicaInsumoServiceTest {
         ficha.setNomePreparo("Arroz branco");
 
         FichaTecnicaInsumoEntity entity = new FichaTecnicaInsumoEntity();
-        entity.setInsumo(insumo);           // 👈 OBRIGATÓRIO
-        entity.setFichaTecnica(ficha);      // 👈 OBRIGATÓRIO
+        entity.setInsumo(insumo);
+        entity.setFichaTecnica(ficha);
         entity.setQuantidade(5.0);
 
         when(relacaoRepository.findById(id))

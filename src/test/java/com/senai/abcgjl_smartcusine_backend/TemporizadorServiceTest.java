@@ -11,12 +11,14 @@ import com.senai.abcgjl_smartcusine_backend.domain.repository.TemporizadorReposi
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.any;
 
 public class TemporizadorServiceTest {
     private TemporizadorRepository temporizadorRepository;
@@ -49,6 +51,7 @@ public class TemporizadorServiceTest {
         TemporizadorDTO resultado = service.criar(dto);
 
         assertNotNull(resultado);
+        verify(temporizadorRepository).save(any());
     }
 
     // ❌ EQUIPAMENTO NÃO EXISTE
@@ -69,14 +72,16 @@ public class TemporizadorServiceTest {
     // ✅ LISTAR
     @Test
     void deveListarTemporizadores() {
-        TemporizadorEntity t = new TemporizadorEntity();
 
+        TemporizadorEntity t = new TemporizadorEntity();
+        t.setIdTemporizador(UUID.randomUUID());
         when(temporizadorRepository.findAll())
                 .thenReturn(List.of(t));
 
         List<TemporizadorDTO> lista = service.listarTodos();
 
-        assertFalse(lista.isEmpty());
+        assertNotNull(lista);
+        assertEquals(1, lista.size());
     }
 
     // ✅ BUSCAR POR ID
@@ -139,6 +144,7 @@ public class TemporizadorServiceTest {
         UUID equipamentoId = UUID.randomUUID();
 
         TemporizadorEntity temporizador = new TemporizadorEntity();
+        temporizador.setIdTemporizador(id);
 
         TemporizadorDTO dto = new TemporizadorDTO(null, 200, 100, equipamentoId);
 
@@ -172,11 +178,13 @@ public class TemporizadorServiceTest {
         UUID id = UUID.randomUUID();
 
         TemporizadorEntity temporizador = new TemporizadorEntity();
+        temporizador.setIdTemporizador(id);
 
         when(temporizadorRepository.findById(id))
                 .thenReturn(Optional.of(temporizador));
 
         assertDoesNotThrow(() -> service.deletar(id));
+
         verify(temporizadorRepository).delete(temporizador);
     }
 }

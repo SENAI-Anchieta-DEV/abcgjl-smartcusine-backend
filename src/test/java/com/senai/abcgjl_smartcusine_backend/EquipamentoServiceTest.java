@@ -2,6 +2,7 @@ package com.senai.abcgjl_smartcusine_backend;
 
 import com.senai.abcgjl_smartcusine_backend.application.service.EquipamentoService;
 import com.senai.abcgjl_smartcusine_backend.domain.entity.EquipamentoEntity;
+import com.senai.abcgjl_smartcusine_backend.domain.exception.EquipamentoNaoEncontradoException;
 import com.senai.abcgjl_smartcusine_backend.domain.repository.EquipamentoRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

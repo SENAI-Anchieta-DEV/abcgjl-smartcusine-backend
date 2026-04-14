@@ -1,4 +1,5 @@
 package com.senai.abcgjl_smartcusine_backend;
+
 import com.senai.abcgjl_smartcusine_backend.application.dto.AuthDTO;
 import com.senai.abcgjl_smartcusine_backend.application.service.AuthService;
 import com.senai.abcgjl_smartcusine_backend.domain.entity.UsuarioEntity;
@@ -14,6 +15,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+
 public class AuthServiceTest {
     private UsuarioRepository usuarios;
     private PasswordEncoder encoder;
@@ -51,6 +53,7 @@ public class AuthServiceTest {
         AuthDTO.LoginRequest req = mock(AuthDTO.LoginRequest.class);
 
         UsuarioEntity usuario = new UsuarioEntity();
+        usuario.setSenha("senhaCriptografada");
 
         when(req.email()).thenReturn("teste@email.com");
         when(req.senha()).thenReturn("123");
@@ -63,6 +66,8 @@ public class AuthServiceTest {
         assertThrows(CredenciaisInvalidasException.class, () -> {
             service.login(req);
         });
+        verify(usuarios).findByEmail("teste@email.com");
+        verify(encoder).matches(any(), any());
     }
 
     // ✅ LOGIN COM SUCESSO
@@ -89,5 +94,35 @@ public class AuthServiceTest {
 
         assertNotNull(token);
         assertEquals("token-jwt", token);
+        verify(usuarios).findByEmail("teste@email.com");
+        verify(encoder).matches("123", "senhaCriptografada");
+        verify(jwt).generateToken(usuario);
+    }
+
+
+    @Test
+    void naoDeveGerarTokenSeSenhaFalhar() {
+
+        AuthDTO.LoginRequest req = mock(AuthDTO.LoginRequest.class);
+
+        UsuarioEntity usuario = new UsuarioEntity();
+        usuario.setSenha("senhaCriptografada");
+
+        when(req.email()).thenReturn("teste@email.com");
+        when(req.senha()).thenReturn("errada");
+
+        when(usuarios.findByEmail("teste@email.com"))
+                .thenReturn(Optional.of(usuario));
+
+        when(encoder.matches("errada", "senhaCriptografada"))
+                .thenReturn(false);
+
+        assertThrows(CredenciaisInvalidasException.class, () -> {
+            service.login(req);
+        });
+
+        // 🔧 ALTERAÇÃO IMPORTANTE: garante que NÃO gera token
+        verify(jwt, never()).generateToken(any());
     }
 }
+

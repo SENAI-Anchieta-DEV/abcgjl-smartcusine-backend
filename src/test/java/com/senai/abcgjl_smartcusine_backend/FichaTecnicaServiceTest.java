@@ -15,7 +15,9 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+
 public class FichaTecnicaServiceTest {
+
     private FichaTecnicaRepository repository;
     private FichaTecnicaService service;
 
@@ -25,11 +27,11 @@ public class FichaTecnicaServiceTest {
         service = new FichaTecnicaService(repository);
     }
 
-    // ✅ CRIAR COM SUCESSO
+    // ✅ CRIAR
     @Test
     void deveCriarFichaTecnica() {
         FichaTecnicaRequestDTO dto = mock(FichaTecnicaRequestDTO.class);
-        FichaTecnicaEntity entity = new FichaTecnicaEntity();
+
         FichaTecnicaEntity saved = new FichaTecnicaEntity();
 
         when(dto.getNomePreparo()).thenReturn("Bolo");
@@ -39,10 +41,12 @@ public class FichaTecnicaServiceTest {
         FichaTecnicaResponseDTO result = service.criar(dto);
 
         assertNotNull(result);
+
+        verify(repository).existsByNomePreparo("Bolo");
         verify(repository).save(any());
     }
 
-    // ❌ NOME DUPLICADO (CRIAÇÃO)
+    // ❌ NOME DUPLICADO (CRIAR)
     @Test
     void deveLancarErroQuandoNomeDuplicadoNaCriacao() {
         FichaTecnicaRequestDTO dto = mock(FichaTecnicaRequestDTO.class);
@@ -55,7 +59,7 @@ public class FichaTecnicaServiceTest {
         });
     }
 
-    // ✅ LISTAR
+    // LISTAR
     @Test
     void deveListarFichas() {
         FichaTecnicaEntity entity = new FichaTecnicaEntity();
@@ -64,10 +68,11 @@ public class FichaTecnicaServiceTest {
 
         List<FichaTecnicaResponseDTO> lista = service.listar();
 
-        assertFalse(lista.isEmpty());
+        assertNotNull(lista);
+        assertEquals(1, lista.size());
     }
 
-    // ❌ BUSCAR PARA ATUALIZAÇÃO - NÃO EXISTE
+    // ATUALIZAÇÃO - NÃO EXISTE
     @Test
     void deveFalharQuandoFichaNaoExisteNaAtualizacao() {
         UUID id = UUID.randomUUID();
@@ -81,7 +86,7 @@ public class FichaTecnicaServiceTest {
         });
     }
 
-    // ❌ NOME DUPLICADO NA ATUALIZAÇÃO
+    // NOME DUPLICADO NA ATUALIZAÇÃO
     @Test
     void deveLancarErroQuandoNomeDuplicadoNaAtualizacao() {
         UUID id = UUID.randomUUID();
@@ -106,8 +111,8 @@ public class FichaTecnicaServiceTest {
         UUID id = UUID.randomUUID();
 
         FichaTecnicaRequestDTO dto = mock(FichaTecnicaRequestDTO.class);
-        FichaTecnicaEntity ficha = new FichaTecnicaEntity();
 
+        FichaTecnicaEntity ficha = new FichaTecnicaEntity();
         ficha.setNomePreparo("Antigo");
 
         when(dto.getNomePreparo()).thenReturn("Novo");
@@ -136,7 +141,7 @@ public class FichaTecnicaServiceTest {
         });
     }
 
-    // ✅ DELETAR COM SUCESSO
+    // ✅ DELETAR
     @Test
     void deveDeletarFichaTecnica() {
         UUID id = UUID.randomUUID();

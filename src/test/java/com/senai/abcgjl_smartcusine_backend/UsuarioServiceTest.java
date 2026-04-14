@@ -17,8 +17,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
+
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -27,15 +30,20 @@ public class UsuarioServiceTest {
     private UsuarioRepository usuarioRepository;
     private PasswordEncoder encoder;
     private UsuarioService usuarioService;
+    private Validator validator;
+
 
     @BeforeEach
     void setup() {
         usuarioRepository = mock(UsuarioRepository.class);
         encoder = mock(PasswordEncoder.class);
         usuarioService = new UsuarioService(usuarioRepository, encoder);
+
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        validator = factory.getValidator();
     }
 
-    // 👇 AQUI VOCÊ CRIA O MÉTODO HELPER
+    //  O MÉTODO HELPER
     private void mockUsuarioLogado() {
         SecurityContext context = mock(SecurityContext.class);
         Authentication auth = mock(Authentication.class);
@@ -46,7 +54,72 @@ public class UsuarioServiceTest {
         SecurityContextHolder.setContext(context);
     }
 
-    // ✅ SUCESSO
+    @Test
+    void deveFalharQuandoNomeForVazio() {
+        UsuarioRequestDTO dto = new UsuarioRequestDTO();
+        dto.setNome("");
+        dto.setEmail("teste@email.com");
+        dto.setSenha("123456");
+        dto.setTipo(TipoUsuario.ADMIN);
+
+        var violations = validator.validate(dto);
+
+        assertFalse(violations.isEmpty());
+    }
+
+    @Test
+    void deveFalharQuandoNomeForPequeno() {
+        UsuarioRequestDTO dto = new UsuarioRequestDTO();
+        dto.setNome("Jo");
+        dto.setEmail("teste@email.com");
+        dto.setSenha("123456");
+        dto.setTipo(TipoUsuario.ADMIN);
+
+        var violations = validator.validate(dto);
+
+        assertFalse(violations.isEmpty());
+    }
+
+    @Test
+    void deveFalharQuandoEmailInvalido() {
+        UsuarioRequestDTO dto = new UsuarioRequestDTO();
+        dto.setNome("João");
+        dto.setEmail("email-invalido");
+        dto.setSenha("123456");
+        dto.setTipo(TipoUsuario.ADMIN);
+
+        var violations = validator.validate(dto);
+
+        assertFalse(violations.isEmpty());
+    }
+
+    @Test
+    void deveFalharQuandoSenhaForCurta() {
+        UsuarioRequestDTO dto = new UsuarioRequestDTO();
+        dto.setNome("João");
+        dto.setEmail("joao@email.com");
+        dto.setSenha("123");
+        dto.setTipo(TipoUsuario.ADMIN);
+
+        var violations = validator.validate(dto);
+
+        assertFalse(violations.isEmpty());
+    }
+
+    @Test
+    void deveFalharQuandoTipoForNulo() {
+        UsuarioRequestDTO dto = new UsuarioRequestDTO();
+        dto.setNome("João");
+        dto.setEmail("joao@email.com");
+        dto.setSenha("123456");
+        dto.setTipo(null);
+
+        var violations = validator.validate(dto);
+
+        assertFalse(violations.isEmpty());
+    }
+
+    // CADASTRAR USUÁRIO
     @Test
     void deveCadastrarUsuarioComSucesso() {
         UsuarioRequestDTO dto = new UsuarioRequestDTO();
@@ -128,11 +201,16 @@ public class UsuarioServiceTest {
     @Test
     void deveFalharAoDeletarUsuarioInexistente() {
         mockUsuarioLogado();
+
+        when(usuarioRepository.findByEmail(any()))
+                .thenReturn(Optional.of(new UsuarioEntity()));
+
         when(usuarioRepository.findById(1L)).thenReturn(Optional.empty());
 
         assertThrows(UsuarioNaoEncontradoException.class, () -> {
             usuarioService.deletarUsuario(1L);
         });
+
         SecurityContextHolder.clearContext();
     }
 
@@ -165,6 +243,81 @@ public class UsuarioServiceTest {
         assertThrows(AcessoNegadoException.class, () -> {
             usuarioService.deletarUsuario(1L);
         });
+
+    }
+        @Test
+        void deveListarUsuarios () {
+            UsuarioEntity usuario = new UsuarioEntity();
+            usuario.setId(1L);
+
+            when(usuarioRepository.findAll())
+                    .thenReturn(java.util.List.of(usuario));
+
+            assertDoesNotThrow(() -> usuarioService.listarUsuarios());
+        }
+
+    // 🔽 ADICIONAR - ATUALIZAR USUÁRIO (SUCESSO)
+
+
+    @Test
+    void deveAtualizarUsuarioComSucesso() {
+        mockUsuarioLogado();
+
+        UsuarioEntity usuario = new UsuarioEntity();
+        usuario.setId(1L);
+        usuario.setTipo(TipoUsuario.ADMIN);
+
+        when(usuarioRepository.findByEmail(any()))
+                .thenReturn(Optional.of(usuario));
+
+        when(usuarioRepository.findById(1L))
+                .thenReturn(Optional.of(usuario));
+
+        when(usuarioRepository.save(any()))
+                .thenAnswer(i -> i.getArgument(0));
+
+        when(encoder.encode(any()))
+                .thenReturn("senhaCriptografada");
+
+        UsuarioRequestDTO dto = new UsuarioRequestDTO();
+        dto.setNome("Novo Nome");
+        dto.setEmail("novo@email.com");
+        dto.setSenha("123456");
+        dto.setTipo(TipoUsuario.ADMIN);
+
+        assertDoesNotThrow(() -> usuarioService.atualizarUsuario(1L, dto));
+
+        SecurityContextHolder.clearContext();
+    }
+
+    // GERENTE NÃO PODE ATUALIZAR ADMIN
+
+
+    @Test
+    void gerenteNaoPodeAtualizarAdmin() {
+        mockUsuarioLogado();
+
+        UsuarioEntity gerente = new UsuarioEntity();
+        gerente.setTipo(TipoUsuario.GERENTE);
+
+        UsuarioEntity admin = new UsuarioEntity();
+        admin.setTipo(TipoUsuario.ADMIN);
+
+        when(usuarioRepository.findByEmail(any()))
+                .thenReturn(Optional.of(gerente));
+
+        when(usuarioRepository.findById(1L))
+                .thenReturn(Optional.of(admin));
+
+        UsuarioRequestDTO dto = new UsuarioRequestDTO();
+        dto.setTipo(TipoUsuario.ADMIN);
+
+        assertThrows(AcessoNegadoException.class, () -> {
+            usuarioService.atualizarUsuario(1L, dto);
+        });
+
+        SecurityContextHolder.clearContext();
     }
 }
+
 

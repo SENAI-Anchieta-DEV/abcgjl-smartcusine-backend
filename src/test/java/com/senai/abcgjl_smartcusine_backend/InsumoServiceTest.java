@@ -17,7 +17,9 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+
 public class InsumoServiceTest {
+
     private InsumoRepository repository;
     private InsumoMapper mapper;
     private InsumoService service;
@@ -44,13 +46,22 @@ public class InsumoServiceTest {
         InsumoResponseDTO resultado = service.criar(dto);
 
         assertNotNull(resultado);
-        assertTrue(entity.getQrCode().startsWith("INSUMO-"));
+
+        assertNotNull(entity.getQrCode());
+
         verify(repository).save(entity);
+
+        verify(mapper).toEntity(dto);
+        verify(mapper).toResponse(entity);
+
+        assertTrue(entity.getQrCode().startsWith("INSUMO-"));
+
     }
 
     // ❌ NOME DUPLICADO
     @Test
     void deveLancarErroQuandoNomeDuplicado() {
+
         InsumoRequestDTO dto = mock(InsumoRequestDTO.class);
 
         when(dto.nome()).thenReturn("Arroz");
@@ -71,8 +82,10 @@ public class InsumoServiceTest {
         when(mapper.toResponse(entity)).thenReturn(response);
 
         List<InsumoResponseDTO> lista = service.listar();
+        assertNotNull(lista);
+        assertEquals(1, lista.size());
 
-        assertFalse(lista.isEmpty());
+        verify(mapper).toResponse(entity);
     }
 
     // ✅ BUSCAR POR ID
@@ -85,8 +98,11 @@ public class InsumoServiceTest {
 
         when(repository.findById(id)).thenReturn(Optional.of(entity));
         when(mapper.toResponse(entity)).thenReturn(response);
+        InsumoResponseDTO resultado = service.buscarPorId(id);
 
-        assertNotNull(service.buscarPorId(id));
+        assertNotNull(resultado);
+
+        verify(mapper).toResponse(entity);
     }
 
     // ❌ NÃO ENCONTRADO
@@ -125,6 +141,7 @@ public class InsumoServiceTest {
 
         assertNotNull(resultado);
         verify(repository).save(entity);
+        verify(mapper).toResponse(entity);
     }
 
     // ❌ ATUALIZAR COM NOME DUPLICADO
@@ -143,6 +160,20 @@ public class InsumoServiceTest {
         when(repository.existsByNome("Duplicado")).thenReturn(true);
 
         assertThrows(RuntimeException.class, () -> {
+            service.atualizar(id, dto);
+        });
+    }
+    // Id não existe na atualização
+    @Test
+    void deveLancarErroQuandoIdNaoExisteNaAtualizacao() {
+
+        UUID id = UUID.randomUUID();
+
+        InsumoRequestDTO dto = mock(InsumoRequestDTO.class);
+
+        when(repository.findById(id)).thenReturn(Optional.empty());
+
+        assertThrows(InsumoNaoEncontradoException.class, () -> {
             service.atualizar(id, dto);
         });
     }
