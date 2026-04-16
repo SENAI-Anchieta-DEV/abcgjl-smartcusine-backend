@@ -30,7 +30,7 @@ public class TemporizadorService {
         temporizador.setTempoAtual(dto.tempoAtual());
 
         EquipamentoEntity equipamento = equipamentoRepository.findById(dto.equipamentoId())
-                .orElseThrow(() -> new EquipamentoNaoEncontradoException());
+                .orElseThrow(() -> new EquipamentoNaoEncontradoException("Equipamento não encontrado"));
         temporizador.setEquipamento(equipamento);
 
         TemporizadorEntity salvo = temporizadorRepository.save(temporizador);
@@ -59,7 +59,7 @@ public class TemporizadorService {
 
         if (dto.equipamentoId() != null) {
             EquipamentoEntity equipamento = equipamentoRepository.findById(dto.equipamentoId())
-                    .orElseThrow(() -> new EquipamentoNaoEncontradoException());
+                    .orElseThrow(() -> new EquipamentoNaoEncontradoException("Equipamento não encontrado"));
             temporizador.setEquipamento(equipamento);
         }
 
