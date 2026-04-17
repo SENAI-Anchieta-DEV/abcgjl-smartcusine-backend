@@ -245,16 +245,16 @@ public class UsuarioServiceTest {
         });
 
     }
-        @Test
-        void deveListarUsuarios () {
-            UsuarioEntity usuario = new UsuarioEntity();
-            usuario.setId(1L);
+    @Test
+    void deveListarUsuarios () {
+        UsuarioEntity usuario = new UsuarioEntity();
+        usuario.setId(1L);
 
-            when(usuarioRepository.findAll())
-                    .thenReturn(java.util.List.of(usuario));
+        when(usuarioRepository.findAll())
+                .thenReturn(java.util.List.of(usuario));
 
-            assertDoesNotThrow(() -> usuarioService.listarUsuarios());
-        }
+        assertDoesNotThrow(() -> usuarioService.listarUsuarios());
+    }
 
     // 🔽 ADICIONAR - ATUALIZAR USUÁRIO (SUCESSO)
 
