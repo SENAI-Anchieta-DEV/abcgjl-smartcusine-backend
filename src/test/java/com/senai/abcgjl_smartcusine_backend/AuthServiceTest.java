@@ -31,7 +31,7 @@ public class AuthServiceTest {
         service = new AuthService(usuarios, encoder, jwt);
     }
 
-    // ❌ USUÁRIO NÃO EXISTE
+    // USUÁRIO NÃO EXISTE
     @Test
     void deveFalharQuandoUsuarioNaoExiste() {
         AuthDTO.LoginRequest req = mock(AuthDTO.LoginRequest.class);
@@ -47,7 +47,7 @@ public class AuthServiceTest {
         });
     }
 
-    // ❌ SENHA INVÁLIDA
+    // SENHA INVÁLIDA
     @Test
     void deveFalharQuandoSenhaIncorreta() {
         AuthDTO.LoginRequest req = mock(AuthDTO.LoginRequest.class);
@@ -70,7 +70,7 @@ public class AuthServiceTest {
         verify(encoder).matches(any(), any());
     }
 
-    // ✅ LOGIN COM SUCESSO
+    // LOGIN COM SUCESSO
     @Test
     void deveFazerLoginComSucesso() {
         AuthDTO.LoginRequest req = mock(AuthDTO.LoginRequest.class);
@@ -121,8 +121,7 @@ public class AuthServiceTest {
             service.login(req);
         });
 
-        // 🔧 ALTERAÇÃO IMPORTANTE: garante que NÃO gera token
+        //ALTERAÇÃO IMPORTANTE: garante que NÃO gera token
         verify(jwt, never()).generateToken(any());
     }
 }
-
