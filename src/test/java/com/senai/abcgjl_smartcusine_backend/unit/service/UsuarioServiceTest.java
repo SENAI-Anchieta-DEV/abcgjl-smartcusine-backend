@@ -8,6 +8,7 @@ import com.senai.abcgjl_smartcusine_backend.domain.exception.EmailJaCadastradoEx
 import com.senai.abcgjl_smartcusine_backend.domain.exception.UsuarioNaoEncontradoException;
 import com.senai.abcgjl_smartcusine_backend.domain.repository.UsuarioRepository;
 import com.senai.abcgjl_smartcusine_backend.interfaces.exception.AcessoNegadoException;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.core.Authentication;
@@ -43,13 +44,21 @@ public class UsuarioServiceTest {
         validator = factory.getValidator();
     }
 
+    @AfterEach
+    void tearDown() {
+        SecurityContextHolder.clearContext();
+    }
     //  O MÉTODO HELPER
-    private void mockUsuarioLogado() {
+    private void mockUsuarioLogado(String email, TipoUsuario tipo) {
         SecurityContext context = mock(SecurityContext.class);
         Authentication auth = mock(Authentication.class);
 
+        UsuarioEntity usuario = new UsuarioEntity();
+        usuario.setEmail(email);
+        usuario.setTipo(tipo);
+
         when(context.getAuthentication()).thenReturn(auth);
-        when(auth.getName()).thenReturn("admin@email.com");
+        when(auth.getName()).thenReturn(email);
 
         SecurityContextHolder.setContext(context);
     }

@@ -44,6 +44,8 @@ public class FichaTecnicaServiceTest {
 
         verify(repository).existsByNomePreparo("Bolo");
         verify(repository).save(any());
+
+    verifyNoMoreInteractions(repository);
     }
 
     // ❌ NOME DUPLICADO (CRIAR)
@@ -57,6 +59,9 @@ public class FichaTecnicaServiceTest {
         assertThrows(RuntimeException.class, () -> {
             service.criar(dto);
         });
+
+        verify(repository).existsByNomePreparo("Bolo");
+        verify(repository, never()).save(any());
     }
 
     // LISTAR
@@ -70,6 +75,8 @@ public class FichaTecnicaServiceTest {
 
         assertNotNull(lista);
         assertEquals(1, lista.size());
+
+        verify(repository).findAll();
     }
 
     // ATUALIZAÇÃO - NÃO EXISTE
@@ -84,6 +91,8 @@ public class FichaTecnicaServiceTest {
         assertThrows(FichaTecnicaNaoEncontradaException.class, () -> {
             service.atualizar(id, dto);
         });
+        verify(repository).findById(id);
+        verify(repository, never()).save(any());
     }
 
     // NOME DUPLICADO NA ATUALIZAÇÃO
@@ -103,6 +112,11 @@ public class FichaTecnicaServiceTest {
         assertThrows(RuntimeException.class, () -> {
             service.atualizar(id, dto);
         });
+
+        verify(repository).findById(id);
+        verify(repository).existsByNomePreparo("Novo");
+
+        verify(repository, never()).save(any());
     }
 
     // ✅ ATUALIZAR COM SUCESSO
@@ -126,7 +140,13 @@ public class FichaTecnicaServiceTest {
         FichaTecnicaResponseDTO result = service.atualizar(id, dto);
 
         assertNotNull(result);
+
+        verify(repository).findById(id);
+        verify(repository).existsByNomePreparo("Novo");
+
         verify(repository).save(ficha);
+
+        verifyNoMoreInteractions(repository);
     }
 
     // ❌ DELETAR NÃO EXISTE
@@ -139,6 +159,9 @@ public class FichaTecnicaServiceTest {
         assertThrows(FichaTecnicaNaoEncontradaException.class, () -> {
             service.deletar(id);
         });
+
+        verify(repository).findById(id);
+        verify(repository, never()).delete(any());
     }
 
     // ✅ DELETAR
@@ -151,6 +174,55 @@ public class FichaTecnicaServiceTest {
         when(repository.findById(id)).thenReturn(Optional.of(ficha));
 
         assertDoesNotThrow(() -> service.deletar(id));
+
+        verify(repository).findById(id);
         verify(repository).delete(ficha);
+    }
+
+    @Test
+    void deveRetornarListaVazia_quandoNaoExistemFichas() {
+        when(repository.findAll()).thenReturn(List.of());
+
+        List<FichaTecnicaResponseDTO> lista = service.listar();
+
+        assertNotNull(lista);
+        assertTrue(lista.isEmpty());
+
+        verify(repository).findAll();
+    }
+    @Test
+    void deveLancarExcecao_quandoFichaNaoExisteNaAtualizacao() {
+        UUID id = UUID.randomUUID();
+        FichaTecnicaRequestDTO dto = mock(FichaTecnicaRequestDTO.class);
+
+        when(repository.findById(id)).thenReturn(Optional.empty());
+
+        assertThrows(FichaTecnicaNaoEncontradaException.class, () -> {
+            service.atualizar(id, dto);
+        });
+
+        verify(repository).findById(id);
+        verify(repository, never()).save(any()); // 🔥 ADICIONADO
+    }
+    @Test
+    void naoDeveAtualizar_quandoNomeDuplicado() {
+        UUID id = UUID.randomUUID();
+
+        FichaTecnicaRequestDTO dto = mock(FichaTecnicaRequestDTO.class);
+        FichaTecnicaEntity ficha = new FichaTecnicaEntity();
+        ficha.setNomePreparo("Antigo");
+
+        when(dto.getNomePreparo()).thenReturn("Novo");
+
+        when(repository.findById(id)).thenReturn(Optional.of(ficha));
+        when(repository.existsByNomePreparo("Novo")).thenReturn(true);
+
+        assertThrows(RuntimeException.class, () -> {
+            service.atualizar(id, dto);
+        });
+
+        verify(repository).findById(id);
+        verify(repository).existsByNomePreparo("Novo");
+        verify(repository, never()).save(any()); // 🔥 ADICIONADO
     }
 }

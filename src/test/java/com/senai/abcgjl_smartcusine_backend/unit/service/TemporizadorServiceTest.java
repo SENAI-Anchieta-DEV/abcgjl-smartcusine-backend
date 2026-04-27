@@ -51,7 +51,11 @@ public class TemporizadorServiceTest {
         TemporizadorDTO resultado = service.criar(dto);
 
         assertNotNull(resultado);
+
+        verify(equipamentoRepository).findById(equipamentoId);
         verify(temporizadorRepository).save(any());
+
+        verifyNoMoreInteractions(equipamentoRepository, temporizadorRepository);
     }
 
     // ❌ EQUIPAMENTO NÃO EXISTE
@@ -67,6 +71,9 @@ public class TemporizadorServiceTest {
         assertThrows(EquipamentoNaoEncontradoException.class, () -> {
             service.criar(dto);
         });
+
+        verify(equipamentoRepository).findById(equipamentoId);
+        verifyNoInteractions(temporizadorRepository);
     }
 
     // ✅ LISTAR
@@ -82,6 +89,8 @@ public class TemporizadorServiceTest {
 
         assertNotNull(lista);
         assertEquals(1, lista.size());
+
+        verify(temporizadorRepository).findAll();
     }
 
     // ✅ BUSCAR POR ID
@@ -95,7 +104,11 @@ public class TemporizadorServiceTest {
         when(temporizadorRepository.findById(id))
                 .thenReturn(Optional.of(t));
 
-        assertNotNull(service.buscarPorId(id));
+        TemporizadorDTO resultado = service.buscarPorId(id);
+
+        assertNotNull(resultado);
+
+        verify(temporizadorRepository).findById(id);
     }
 
     // ❌ NÃO ENCONTRADO
@@ -109,6 +122,9 @@ public class TemporizadorServiceTest {
         assertThrows(TemporizadorNaoEncontradoException.class, () -> {
             service.buscarPorId(id);
         });
+
+        verify(temporizadorRepository).findById(id);
+        verifyNoInteractions(equipamentoRepository);
     }
 
     // ✅ ATUALIZAR
@@ -134,7 +150,13 @@ public class TemporizadorServiceTest {
         when(temporizadorRepository.save(any()))
                 .thenAnswer(i -> i.getArgument(0));
 
-        assertNotNull(service.atualizar(id, dto));
+        TemporizadorDTO resultado = service.atualizar(id, dto); // ALTERAR ✔
+
+        assertNotNull(resultado);
+
+        verify(temporizadorRepository).findById(id);
+        verify(equipamentoRepository).findById(equipamentoId);
+        verify(temporizadorRepository).save(any());
     }
 
     // ❌ ATUALIZAR COM EQUIPAMENTO INVÁLIDO
@@ -157,6 +179,10 @@ public class TemporizadorServiceTest {
         assertThrows(EquipamentoNaoEncontradoException.class, () -> {
             service.atualizar(id, dto);
         });
+
+        verify(temporizadorRepository).findById(id);
+        verify(equipamentoRepository).findById(equipamentoId);
+        verify(temporizadorRepository, never()).save(any());
     }
 
     // ❌ DELETAR NÃO ENCONTRADO
@@ -170,6 +196,8 @@ public class TemporizadorServiceTest {
         assertThrows(TemporizadorNaoEncontradoException.class, () -> {
             service.deletar(id);
         });
+        verify(temporizadorRepository).findById(id);
+        verify(temporizadorRepository, never()).delete(any());
     }
 
     // ✅ DELETAR
@@ -185,6 +213,7 @@ public class TemporizadorServiceTest {
 
         assertDoesNotThrow(() -> service.deletar(id));
 
+        verify(temporizadorRepository).findById(id);
         verify(temporizadorRepository).delete(temporizador);
     }
 }

@@ -44,6 +44,10 @@ public class InsumoServiceTest {
 
         assertNotNull(resultado);
         assertTrue(entity.getQrCode().startsWith("INSUMO-"));
+
+        verify(repository).existsByNome("Arroz");
+        verify(mapper).toEntity(dto);
+        verify(mapper).toResponse(entity);
         verify(repository).save(entity);
     }
 
@@ -58,6 +62,10 @@ public class InsumoServiceTest {
         assertThrows(RuntimeException.class, () -> {
             service.criar(dto);
         });
+
+        verify(repository).existsByNome("Arroz");
+        verify(repository, never()).save(any());
+        verifyNoInteractions(mapper);
     }
 
     //LISTAR
@@ -72,6 +80,21 @@ public class InsumoServiceTest {
         List<InsumoResponseDTO> lista = service.listar();
 
         assertFalse(lista.isEmpty());
+
+        verify(repository).findAll();
+        verify(mapper).toResponse(entity);
+    }
+
+    @Test
+    void deveRetornarListaVazia() { // 🔥 ADICIONAR
+        when(repository.findAll()).thenReturn(List.of());
+
+        List<InsumoResponseDTO> lista = service.listar();
+
+        assertNotNull(lista);
+        assertTrue(lista.isEmpty());
+
+        verify(repository).findAll();
     }
 
     //BUSCAR POR ID
@@ -85,7 +108,12 @@ public class InsumoServiceTest {
         when(repository.findById(id)).thenReturn(Optional.of(entity));
         when(mapper.toResponse(entity)).thenReturn(response);
 
-        assertNotNull(service.buscarPorId(id));
+        InsumoResponseDTO resultado = service.buscarPorId(id);
+
+        assertNotNull(resultado);
+
+        verify(repository).findById(id);
+        verify(mapper).toResponse(entity);
     }
 
     //NÃO ENCONTRADO
@@ -98,6 +126,9 @@ public class InsumoServiceTest {
         assertThrows(InsumoNaoEncontradoException.class, () -> {
             service.buscarPorId(id);
         });
+
+        verify(repository).findById(id);
+        verifyNoInteractions(mapper);
     }
 
     //ATUALIZAR
@@ -123,6 +154,10 @@ public class InsumoServiceTest {
         InsumoResponseDTO resultado = service.atualizar(id, dto);
 
         assertNotNull(resultado);
+
+        verify(repository).findById(id);
+        verify(mapper).toResponse(entity);
+        verify(repository).existsByNome("Novo");
         verify(repository).save(entity);
     }
 
@@ -144,6 +179,12 @@ public class InsumoServiceTest {
         assertThrows(RuntimeException.class, () -> {
             service.atualizar(id, dto);
         });
+
+        verify(repository).findById(id);
+        verify(repository).existsByNome("Duplicado");
+        verify(repository, never()).save(any());
+        verifyNoInteractions(mapper);
+
     }
 
     //DELETAR NÃO ENCONTRADO
@@ -156,6 +197,10 @@ public class InsumoServiceTest {
         assertThrows(InsumoNaoEncontradoException.class, () -> {
             service.deletar(id);
         });
+
+        verify(repository).findById(id);
+        verify(repository, never()).delete(any());
+ verifyNoInteractions(mapper);
     }
 
     //DELETAR
@@ -168,6 +213,8 @@ public class InsumoServiceTest {
         when(repository.findById(id)).thenReturn(Optional.of(entity));
 
         assertDoesNotThrow(() -> service.deletar(id));
+
+        verify(repository).findById(id);
         verify(repository).delete(entity);
     }
 }
