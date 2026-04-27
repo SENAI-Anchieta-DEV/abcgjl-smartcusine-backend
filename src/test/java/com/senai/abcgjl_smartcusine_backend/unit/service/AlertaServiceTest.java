@@ -1,4 +1,4 @@
-package com.senai.abcgjl_smartcusine_backend;
+package com.senai.abcgjl_smartcusine_backend.unit.service;
 
 import com.senai.abcgjl_smartcusine_backend.application.dto.AlertaResponseDTO;
 import com.senai.abcgjl_smartcusine_backend.application.service.AlertaService;
@@ -24,6 +24,8 @@ public class AlertaServiceTest {
         service = new AlertaService(repository);
     }
 
+    // Task 2
+
     // ✅ LISTAR ALERTAS
     @Test
     void deveListarAlertas() {
@@ -35,8 +37,24 @@ public class AlertaServiceTest {
 
         assertNotNull(lista);
         assertFalse(lista.isEmpty());
+
+        verify(repository).findAll();
     }
 
+    // ✅ LISTA VAZIA
+    @Test
+    void deveRetornarListaVaziaQuandoNaoExistemAlertas() {
+        when(repository.findAll()).thenReturn(List.of());
+
+        List<AlertaResponseDTO> lista = service.listar();
+
+        assertNotNull(lista);
+        assertTrue(lista.isEmpty());
+
+        verify(repository).findAll();
+    }
+
+    // Task 1 e 2
     // ❌ DELETAR QUANDO NÃO EXISTE
     @Test
     void deveFalharAoDeletarQuandoNaoExiste() {
@@ -47,6 +65,7 @@ public class AlertaServiceTest {
         assertThrows(AlertaNaoEncontradoException.class, () -> {
             service.deletar(id);
         });
+        verify(repository).existsById(id);
     }
 
     // ✅ DELETAR COM SUCESSO
@@ -57,6 +76,21 @@ public class AlertaServiceTest {
         when(repository.existsById(id)).thenReturn(true);
 
         assertDoesNotThrow(() -> service.deletar(id));
+        verify(repository).existsById(id);
         verify(repository).deleteById(id);
+
+    }
+
+    @Test
+    void naoDeveDeletarQuandoNaoExiste() {
+        UUID id = UUID.randomUUID();
+
+        when(repository.existsById(id)).thenReturn(false);
+
+        assertThrows(AlertaNaoEncontradoException.class, () -> {
+            service.deletar(id);
+        });
+
+        verify(repository, never()).deleteById(id);
     }
 }

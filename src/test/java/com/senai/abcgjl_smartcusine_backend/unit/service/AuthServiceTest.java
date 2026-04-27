@@ -1,4 +1,4 @@
-package com.senai.abcgjl_smartcusine_backend;
+package com.senai.abcgjl_smartcusine_backend.unit.service;
 
 import com.senai.abcgjl_smartcusine_backend.application.dto.AuthDTO;
 import com.senai.abcgjl_smartcusine_backend.application.service.AuthService;
@@ -45,6 +45,8 @@ public class AuthServiceTest {
         assertThrows(UsuarioNaoEncontradoException.class, () -> {
             service.login(req);
         });
+
+        verify(usuarios).findByEmail("teste@email.com");
     }
 
     // SENHA INVÁLIDA
@@ -120,6 +122,9 @@ public class AuthServiceTest {
         assertThrows(CredenciaisInvalidasException.class, () -> {
             service.login(req);
         });
+
+        verify(usuarios).findByEmail("teste@email.com");
+        verify(encoder).matches("errada", "senhaCriptografada");
 
         // ALTERAÇÃO IMPORTANTE: garante que NÃO gera token
         verify(jwt, never()).generateToken(any());

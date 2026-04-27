@@ -1,4 +1,4 @@
-package com.senai.abcgjl_smartcusine_backend;
+package com.senai.abcgjl_smartcusine_backend.unit.service;
 
 import com.senai.abcgjl_smartcusine_backend.application.dto.FichaTecnicaInsumoRequestDTO;
 import com.senai.abcgjl_smartcusine_backend.application.dto.FichaTecnicaInsumoResponseDTO;
@@ -74,6 +74,7 @@ public class FichaTecnicaInsumoServiceTest {
         assertThrows(RuntimeException.class, () -> {
             service.adicionarInsumo(fichaId, insumoId, 10.0);
         });
+    verify(relacaoRepository).existsByFichaTecnicaIdAndInsumoId(fichaId, insumoId);
     }
 
     // ❌ FICHA NÃO EXISTE
@@ -92,6 +93,7 @@ public class FichaTecnicaInsumoServiceTest {
         assertThrows(RuntimeException.class, () -> {
             service.adicionarInsumo(fichaId, insumoId, 10.0);
         });
+    verify(fichaRepository).findById(fichaId);
     }
 
     // ❌ INSUMO NÃO EXISTE
@@ -115,6 +117,8 @@ public class FichaTecnicaInsumoServiceTest {
         assertThrows(RuntimeException.class, () -> {
             service.adicionarInsumo(fichaId, insumoId, 10.0);
         });
+
+        verify(insumoRepository).findById(insumoId);
     }
 
     // ✅ ADICIONAR COM SUCESSO
@@ -155,6 +159,7 @@ public class FichaTecnicaInsumoServiceTest {
     @Test
     void deveListarRelacoes() {
 
+
         InsumoEntity insumo = new InsumoEntity();
         insumo.setNome("Arroz");
 
@@ -172,8 +177,9 @@ public class FichaTecnicaInsumoServiceTest {
         List<FichaTecnicaInsumoResponseDTO> lista = service.listar();
 
         assertFalse(lista.isEmpty());
-
         assertEquals(1, lista.size());
+
+        verify(relacaoRepository).findAll();
     }
 
     // ❌ ATUALIZAR QUANTIDADE INVÁLIDA
@@ -203,6 +209,8 @@ public class FichaTecnicaInsumoServiceTest {
         assertThrows(RuntimeException.class, () -> {
             service.atualizar(id, dto);
         });
+
+        verify(relacaoRepository).findById(id);
     }
 
     // ✅ ATUALIZAR COM SUCESSO

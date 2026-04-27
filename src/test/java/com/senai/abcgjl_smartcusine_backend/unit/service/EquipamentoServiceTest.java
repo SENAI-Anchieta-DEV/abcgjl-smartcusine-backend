@@ -1,4 +1,4 @@
-package com.senai.abcgjl_smartcusine_backend;
+package com.senai.abcgjl_smartcusine_backend.unit.service;
 import com.senai.abcgjl_smartcusine_backend.application.service.EquipamentoService;
 import com.senai.abcgjl_smartcusine_backend.domain.entity.EquipamentoEntity;
 import com.senai.abcgjl_smartcusine_backend.domain.repository.EquipamentoRepository;
@@ -46,6 +46,20 @@ public class EquipamentoServiceTest {
         List<EquipamentoEntity> lista = service.listar();
 
         assertFalse(lista.isEmpty());
+
+        verify(repository).findAll();
+    }
+
+    @Test
+    void deveRetornarListaVaziaQuandoNaoExistemEquipamentos() {
+        when(repository.findAll()).thenReturn(List.of());
+
+        List<EquipamentoEntity> lista = service.listar();
+
+        assertTrue(lista.isEmpty());
+
+        // TASK 2
+        verify(repository).findAll();
     }
 
     // ❌ BUSCAR POR ID NÃO EXISTE
@@ -60,6 +74,8 @@ public class EquipamentoServiceTest {
         });
 
         assertEquals("Equipamento não encontrado", ex.getMessage());
+
+        verify(repository).findById(id);
     }
 
     // ✅ BUSCAR POR ID
@@ -74,6 +90,8 @@ public class EquipamentoServiceTest {
         EquipamentoEntity result = service.buscarPorId(id);
 
         assertNotNull(result);
+
+        verify(repository).findById(id);
     }
 
     // ❌ ATUALIZAR NÃO EXISTE
@@ -87,6 +105,7 @@ public class EquipamentoServiceTest {
         assertThrows(RuntimeException.class, () -> {
             service.atualizar(id, novo);
         });
+        verify(repository).findById(id);
     }
 
     // ✅ ATUALIZAR
@@ -103,6 +122,8 @@ public class EquipamentoServiceTest {
         EquipamentoEntity result = service.atualizar(id, novo);
 
         assertNotNull(result);
+
+        verify(repository).findById(id);
         verify(repository).save(existente);
     }
 
@@ -116,6 +137,7 @@ public class EquipamentoServiceTest {
         assertThrows(RuntimeException.class, () -> {
             service.deletar(id);
         });
+        verify(repository).findById(id);
     }
 
     // ✅ DELETAR
@@ -128,7 +150,21 @@ public class EquipamentoServiceTest {
         when(repository.findById(id)).thenReturn(Optional.of(equipamento));
 
         assertDoesNotThrow(() -> service.deletar(id));
+
+        verify(repository).findById(id);
         verify(repository).delete(equipamento);
+    }
+    @Test
+    void naoDeveDeletarQuandoNaoExiste() {
+        UUID id = UUID.randomUUID();
+
+        when(repository.findById(id)).thenReturn(Optional.empty());
+
+        assertThrows(RuntimeException.class, () -> {
+            service.deletar(id);
+        });
+
+        verify(repository, never()).delete(any());
     }
 
 }

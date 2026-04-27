@@ -1,4 +1,4 @@
-package com.senai.abcgjl_smartcusine_backend;
+package com.senai.abcgjl_smartcusine_backend.unit.service;
 
 import com.senai.abcgjl_smartcusine_backend.application.dto.FichaTecnicaRequestDTO;
 import com.senai.abcgjl_smartcusine_backend.application.dto.FichaTecnicaResponseDTO;
