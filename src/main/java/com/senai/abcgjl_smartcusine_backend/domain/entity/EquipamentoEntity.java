@@ -30,7 +30,7 @@ public class EquipamentoEntity {
     @OneToMany(mappedBy = "equipamento", cascade = CascadeType.ALL)
     private List<AlertaEntity> alertas;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "ficha_tecnica_id")
     private FichaTecnicaEntity fichaTecnica;
 
