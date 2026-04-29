@@ -82,6 +82,19 @@ public class AlertaServiceTest {
     }
 
     @Test
+    void naoDeveChamarDeleteQuandoAlertaNaoExiste() {
+        UUID id = UUID.randomUUID();
+
+        when(repository.existsById(id)).thenReturn(false);
+
+        assertThrows(AlertaNaoEncontradoException.class, () -> {
+            service.deletar(id);
+        });
+
+        verify(repository, never()).deleteById(id);
+    }
+
+    @Test
     void naoDeveDeletarQuandoNaoExiste() {
         UUID id = UUID.randomUUID();
 

@@ -20,6 +20,18 @@ public class AuthService {
     private final JwtService jwt;
 
     public String login(AuthDTO.LoginRequest req) {
+        if (req == null) { // ✅ ADICIONADO
+            throw new IllegalArgumentException("Request não pode ser nulo");
+        }
+
+        if (req.email() == null || req.email().isBlank()) { // ✅ ADICIONADO
+            throw new IllegalArgumentException("Email inválido");
+        }
+
+        if (req.senha() == null || req.senha().isBlank()) { // ✅ ADICIONADO
+            throw new IllegalArgumentException("Senha inválida");
+        }
+
         UsuarioEntity usuario = usuarios.findByEmail(req.email())
                 .orElseThrow(() ->  new UsuarioNaoEncontradoException(/*"Usuário não foi encontrado"*/));
 

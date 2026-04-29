@@ -16,6 +16,18 @@ public class EquipamentoService {
     }
 
     public EquipamentoEntity criar(EquipamentoEntity equipamento) {
+        if (equipamento == null) {
+            throw new IllegalArgumentException("Equipamento não pode ser nulo");
+        }
+
+        if (equipamento.getTipo() == null || equipamento.getTipo().isBlank()) {
+            throw new IllegalArgumentException("Tipo não pode ser vazio");
+        }
+
+        if (equipamento.getTemperaturaIdeal() < 0) {
+            throw new IllegalArgumentException("Temperatura ideal inválida");
+        }
+
         return repository.save(equipamento);
     }
 
@@ -23,12 +35,22 @@ public class EquipamentoService {
         return repository.findAll();
     }
 
+
     public EquipamentoEntity buscarPorId(UUID id) {
+        if (id == null) {
+            throw new IllegalArgumentException("ID não pode ser nulo");
+        }
         return repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Equipamento não encontrado"));
     }
 
     public EquipamentoEntity atualizar(UUID id, EquipamentoEntity equipamento) {
+        if (id == null || equipamento == null) {
+            throw new IllegalArgumentException("ID e equipamento não podem ser nulos");
+        }
+        if (equipamento.getTipo() == null || equipamento.getTipo().isBlank()) {
+            throw new IllegalArgumentException("Tipo não pode ser vazio");
+        }
 
         EquipamentoEntity existente = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Equipamento não encontrado"));
@@ -42,6 +64,9 @@ public class EquipamentoService {
     }
 
     public void deletar(UUID id) {
+        if (id == null) {
+            throw new IllegalArgumentException("ID não pode ser nulo");
+        }
 
         EquipamentoEntity equipamento = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Equipamento não encontrado"));

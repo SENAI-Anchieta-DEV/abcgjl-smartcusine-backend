@@ -33,7 +33,6 @@ public class FichaTecnicaInsumoService {
     }
 
     public FichaTecnicaInsumoResponseDTO adicionarInsumo(UUID idFicha, UUID idInsumo, Double quantidade){
-
         if (quantidade == null || quantidade <= 0) {
             throw new IllegalArgumentException("A quantidade deve ser maior que zero");
         }
@@ -69,12 +68,18 @@ public class FichaTecnicaInsumoService {
     }
 
     public void deletar(UUID id){
+        if (id == null) {
+            throw new IllegalArgumentException("ID não pode ser nulo");
+        }
+
+        if (!fichaTecnicaInsumoRepository.existsById(id)) {
+            throw new RuntimeException("Relação não encontrada");
+        }
         fichaTecnicaInsumoRepository.deleteById(id);
     }
 
     public FichaTecnicaInsumoResponseDTO atualizar(UUID id, FichaTecnicaInsumoRequestDTO dto){
-
-        if (dto.quantidade() == null || dto.quantidade() <= 0) {
+        if (dto == null || dto.quantidade() == null || dto.quantidade() <= 0) {
             throw new IllegalArgumentException("A quantidade deve ser maior que zero");
         }
 

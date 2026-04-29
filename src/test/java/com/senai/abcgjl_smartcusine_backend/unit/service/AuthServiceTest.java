@@ -17,10 +17,13 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class AuthServiceTest {
+
     private UsuarioRepository usuarios;
     private PasswordEncoder encoder;
     private JwtService jwt;
     private AuthService service;
+
+
 
     @BeforeEach
     void setup() {
@@ -128,5 +131,34 @@ public class AuthServiceTest {
 
         // ALTERAÇÃO IMPORTANTE: garante que NÃO gera token
         verify(jwt, never()).generateToken(any());
+    }
+
+    @Test
+    void deveFalharQuandoRequestForNulo() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            service.login(null);
+        });
+    }
+    @Test
+    void deveFalharQuandoEmailForNulo() {
+        AuthDTO.LoginRequest req = mock(AuthDTO.LoginRequest.class);
+
+        when(req.email()).thenReturn(null);
+        when(req.senha()).thenReturn("123");
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            service.login(req);
+        });
+    }
+    @Test
+    void deveFalharQuandoSenhaForNula() {
+        AuthDTO.LoginRequest req = mock(AuthDTO.LoginRequest.class);
+
+        when(req.email()).thenReturn("teste@email.com");
+        when(req.senha()).thenReturn(null);
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            service.login(req);
+        });
     }
 }

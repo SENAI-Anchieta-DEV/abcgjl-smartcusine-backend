@@ -27,6 +27,8 @@ public class EquipamentoServiceTest {
     @Test
     void deveCriarEquipamento() {
         EquipamentoEntity equipamento = new EquipamentoEntity();
+equipamento.setTipo("Forno");
+equipamento.setTemperaturaIdeal(100.0);
 
         when(repository.save(equipamento)).thenReturn(equipamento);
 
@@ -99,6 +101,8 @@ public class EquipamentoServiceTest {
     void deveFalharAoAtualizarQuandoNaoExiste() {
         UUID id = UUID.randomUUID();
         EquipamentoEntity novo = new EquipamentoEntity();
+        novo.setTipo("Forno");
+        novo.setTemperaturaIdeal(100.0);
 
         when(repository.findById(id)).thenReturn(Optional.empty());
 
@@ -115,6 +119,7 @@ public class EquipamentoServiceTest {
 
         EquipamentoEntity existente = new EquipamentoEntity();
         EquipamentoEntity novo = new EquipamentoEntity();
+        novo.setTipo("Forno");
 
         when(repository.findById(id)).thenReturn(Optional.of(existente));
         when(repository.save(any())).thenReturn(existente);
@@ -166,5 +171,37 @@ public class EquipamentoServiceTest {
 
         verify(repository, never()).delete(any());
     }
+    @Test
+    void deveFalharQuandoIdForNuloAoBuscar() {
+        UUID id = UUID.randomUUID();
+        assertThrows(IllegalArgumentException.class, () -> {
+            service.buscarPorId(null);
+        });
+    }
 
+    @Test
+    void deveFalharQuandoEquipamentoForNuloAoCriar() {
+        UUID id = UUID.randomUUID();
+        assertThrows(IllegalArgumentException.class, () -> {
+            service.criar(null);
+        });
+    }
+
+    @Test
+    void deveFalharQuandoEquipamentoForNuloAoAtualizar() {
+        UUID id = UUID.randomUUID();
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            service.atualizar(id, null);
+        });
+    }
+
+    @Test
+    void deveFalharQuandoIdForNuloAoDeletar() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            service.deletar(null);
+        });
+
+        verify(repository, never()).delete(any());
+    }
 }

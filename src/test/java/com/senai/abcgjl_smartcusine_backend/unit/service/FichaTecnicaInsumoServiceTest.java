@@ -11,6 +11,9 @@ import com.senai.abcgjl_smartcusine_backend.domain.repository.FichaTecnicaReposi
 import com.senai.abcgjl_smartcusine_backend.domain.repository.InsumoRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -24,6 +27,17 @@ public class FichaTecnicaInsumoServiceTest {
     private FichaTecnicaRepository fichaRepository;
     private InsumoRepository insumoRepository;
     private FichaTecnicaInsumoService service;
+
+    @Mock
+    private InsumoRepository insumoRepository;
+
+    @InjectMocks
+    private FichaTecnicaInsumoService fichaTecnicaInsumoService;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
 
     @BeforeEach
     void setup() {
@@ -44,6 +58,9 @@ public class FichaTecnicaInsumoServiceTest {
         UUID fichaId = UUID.randomUUID();
         UUID insumoId = UUID.randomUUID();
 
+        when(relacaoRepository.existsByFichaTecnicaIdAndInsumoId(fichaId, insumoId))
+                .thenReturn(false);
+
         assertThrows(IllegalArgumentException.class, () -> {
             service.adicionarInsumo(fichaId, insumoId, 0.0);
         });
@@ -56,6 +73,9 @@ public class FichaTecnicaInsumoServiceTest {
 
         UUID fichaId = UUID.randomUUID();
         UUID insumoId = UUID.randomUUID();
+
+        when(relacaoRepository.existsByFichaTecnicaIdAndInsumoId(fichaId, insumoId))
+                .thenReturn(false);
 
         assertThrows(IllegalArgumentException.class, () -> {
             service.adicionarInsumo(fichaId, insumoId, null);
@@ -251,8 +271,86 @@ public class FichaTecnicaInsumoServiceTest {
     void deveDeletarRelacao() {
         UUID id = UUID.randomUUID();
 
+        when(relacaoRepository.existsById(id)).thenReturn(true);
+
         assertDoesNotThrow(() -> service.deletar(id));
+
         verify(relacaoRepository).deleteById(id);
+    }
+
+    @Test
+    void deveFalharQuandoFichaTecnicaNaoPossuiDados() {
+        UUID fichaId = UUID.randomUUID();
+        UUID insumoId = UUID.randomUUID();
+
+        FichaTecnicaEntity ficha = new FichaTecnicaEntity();
+        ficha.setNomePreparo("");  // Ficha vazia
+
+        when(fichaRepository.findById(fichaId))
+                .thenReturn(Optional.of(ficha));
+
+        assertThrows(RuntimeException.class, () -> {
+            service.adicionarInsumo(fichaId, insumoId, 10.0);
+        });
+
+        verify(fichaRepository).findById(fichaId);
+    }
+
+    @Test
+    void deveFalharQuandoInsumoNaoPossuiNome() {
+        UUID fichaId = UUID.randomUUID();
+
+        UUID insumoId = UUID.randomUUID();
+
+        InsumoEntity insumo = new InsumoEntity();
+        insumo.setNome(null);  // Insumo sem nome
+
+        when(insumoRepository.findById(insumoId))
+                .thenReturn(Optional.of(insumo));
+
+        assertThrows(RuntimeException.class, () -> {
+            service.adicionarInsumo(fichaId, insumoId, 10.0);
+
+            verify(insumoRepository).findById(insumoId);
+
+        });
+
+        verify(insumoRepository).findById(insumoId);
+    }
+
+    @Test
+    void deveFalharAoDeletarQuandoIdForNulo() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            service.deletar(null);
+        });
+
+        verify(relacaoRepository, never()).deleteById(any());
+    }
+    @Test
+    void deveFalharAoDeletarQuandoNaoExiste() {
+        UUID id = UUID.randomUUID();
+
+        when(relacaoRepository.existsById(id)).thenReturn(false);
+
+        assertThrows(RuntimeException.class, () -> {
+            service.deletar(id);
+        });
+
+        verify(relacaoRepository, never()).deleteById(any());
+    }
+    @Test
+    void deveFalharQuandoDtoForNulo() {
+        UUID id = UUID.randomUUID();
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            service.atualizar(id, null);
+        });
+    }
+    @Test
+    void deveFalharQuandoIdsForemNulos() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            service.adicionarInsumo(null, null, 10.0);
+        });
     }
 }
 
