@@ -43,7 +43,7 @@ public class FichaTecnicaService {
     public FichaTecnicaResponseDTO atualizar(UUID id, FichaTecnicaRequestDTO dto) {
 
         FichaTecnicaEntity ficha = repository.findById(id)
-                .orElseThrow(() -> new FichaTecnicaNaoEncontradaException());
+                .orElseThrow(() -> new FichaTecnicaNaoEncontradaException("Ficha técnica não encontrada"));
 
         if(repository.existsByNomePreparo(dto.getNomePreparo()) &&
                 !ficha.getNomePreparo().equals(dto.getNomePreparo())){
@@ -63,7 +63,7 @@ public class FichaTecnicaService {
     public void deletar(UUID id) {
 
         FichaTecnicaEntity ficha = repository.findById(id)
-                .orElseThrow(() -> new FichaTecnicaNaoEncontradaException());
+                .orElseThrow(() -> new FichaTecnicaNaoEncontradaException("Ficha técnica não encontrada"));
 
         repository.delete(ficha);
     }
