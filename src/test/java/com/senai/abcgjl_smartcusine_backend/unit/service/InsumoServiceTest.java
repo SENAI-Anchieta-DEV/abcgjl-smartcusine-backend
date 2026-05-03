@@ -37,20 +37,21 @@ public class InsumoServiceTest {
 
         when(dto.nome()).thenReturn("Arroz");
         when(repository.existsByNome("Arroz")).thenReturn(false);
+
         when(mapper.toEntity(dto)).thenReturn(entity);
         when(mapper.toResponse(entity)).thenReturn(response);
 
         InsumoResponseDTO resultado = service.criar(dto);
 
         assertNotNull(resultado);
+
         assertTrue(entity.getQrCode().startsWith("INSUMO-"));
 
         verify(repository).existsByNome("Arroz");
+        verify(repository).save(entity);
         verify(mapper).toEntity(dto);
         verify(mapper).toResponse(entity);
-        verify(repository).save(entity);
     }
-
     //NOME DUPLICADO
     @Test
     void deveLancarErroQuandoNomeDuplicado() {

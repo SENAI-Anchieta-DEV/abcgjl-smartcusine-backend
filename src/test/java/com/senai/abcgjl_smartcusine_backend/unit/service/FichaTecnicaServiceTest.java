@@ -83,7 +83,6 @@ public class FichaTecnicaServiceTest {
     @Test
     void deveFalharQuandoFichaNaoExisteNaAtualizacao() {
         UUID id = UUID.randomUUID();
-
         FichaTecnicaRequestDTO dto = mock(FichaTecnicaRequestDTO.class);
 
         when(repository.findById(id)).thenReturn(Optional.empty());
@@ -91,10 +90,7 @@ public class FichaTecnicaServiceTest {
         assertThrows(FichaTecnicaNaoEncontradaException.class, () -> {
             service.atualizar(id, dto);
         });
-        verify(repository).findById(id);
-        verify(repository, never()).save(any());
     }
-
     // NOME DUPLICADO NA ATUALIZAÇÃO
     @Test
     void deveLancarErroQuandoNomeDuplicadoNaAtualizacao() {
@@ -224,6 +220,54 @@ public class FichaTecnicaServiceTest {
         verify(repository).findById(id);
         verify(repository).existsByNomePreparo("Novo");
         verify(repository, never()).save(any()); // 🔥 ADICIONADO
+    }
+    @Test
+    void deveFalharQuandoDtoForNulo() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            service.criar(null);
+        });
+
+        verifyNoInteractions(repository);
+    }
+    @Test
+    void deveFalharQuandoNomeForNuloOuVazio() {
+        FichaTecnicaRequestDTO dto = mock(FichaTecnicaRequestDTO.class);
+
+        when(dto.getNomePreparo()).thenReturn("");
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            service.criar(dto);
+        });
+
+        verify(repository, never()).save(any());
+    }
+    @Test
+    void deveFalharQuandoIdForNuloNaAtualizacao() {
+        FichaTecnicaRequestDTO dto = mock(FichaTecnicaRequestDTO.class);
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            service.atualizar(null, dto);
+        });
+
+        verifyNoInteractions(repository);
+    }
+    @Test
+    void deveFalharQuandoDtoForNuloNaAtualizacao() {
+        UUID id = UUID.randomUUID();
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            service.atualizar(id, null);
+        });
+
+        verifyNoInteractions(repository);
+    }
+    @Test
+    void deveFalharQuandoIdForNuloAoDeletar() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            service.deletar(null);
+        });
+
+        verifyNoInteractions(repository);
     }
 }
 

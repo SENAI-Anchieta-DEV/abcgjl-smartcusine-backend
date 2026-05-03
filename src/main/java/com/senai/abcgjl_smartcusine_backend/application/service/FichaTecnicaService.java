@@ -22,6 +22,14 @@ public class FichaTecnicaService {
 
     public FichaTecnicaResponseDTO criar(FichaTecnicaRequestDTO dto) {
 
+        if (dto == null) {
+            throw new IllegalArgumentException("DTO não pode ser nulo");
+        }
+
+        if (dto.getNomePreparo() == null || dto.getNomePreparo().isBlank()) {
+            throw new IllegalArgumentException("Nome é obrigatório");
+        }
+
         if(repository.existsByNomePreparo(dto.getNomePreparo())){
             throw new RuntimeException("Já existe uma ficha técnica com esse nome");
         }
@@ -39,28 +47,46 @@ public class FichaTecnicaService {
                 .map(FichaTecnicaMapper::toResponseDTO)
                 .toList();
     }
-
     public FichaTecnicaResponseDTO atualizar(UUID id, FichaTecnicaRequestDTO dto) {
 
-        FichaTecnicaEntity ficha = repository.findById(id)
-                .orElseThrow(() -> new FichaTecnicaNaoEncontradaException());
+        // ✅ 1. VALIDAÇÕES BÁSICAS
+        if (id == null) {
+            throw new IllegalArgumentException("ID não pode ser nulo");
+        }
 
-        if(repository.existsByNomePreparo(dto.getNomePreparo()) &&
-                !ficha.getNomePreparo().equals(dto.getNomePreparo())){
+        if (dto == null) {
+            throw new IllegalArgumentException("DTO não pode ser nulo");
+        }
+
+        // ✅ 2. BUSCA PRIMEIRO (ANTES DE QUALQUER get do DTO)
+        FichaTecnicaEntity ficha = repository.findById(id)
+                .orElseThrow(FichaTecnicaNaoEncontradaException::new);
+
+        // ✅ 3. AGORA SIM valida conteúdo
+        String nome = dto.getNomePreparo();
+
+        if (nome == null || nome.isBlank()) {
+            throw new IllegalArgumentException("Nome é obrigatório");
+        }
+
+        // ✅ 4. REGRA DE NEGÓCIO
+        if (repository.existsByNomePreparo(nome) &&
+                !ficha.getNomePreparo().equals(nome)) {
 
             throw new RuntimeException("Já existe uma ficha técnica com esse nome");
         }
 
-        ficha.setNomePreparo(dto.getNomePreparo());
+        ficha.setNomePreparo(nome);
         ficha.setTempoIdeal(dto.getTempoIdeal());
         ficha.setTemperaturaIdeal(dto.getTemperaturaIdeal());
 
-        FichaTecnicaEntity atualizada = repository.save(ficha);
-
-        return FichaTecnicaMapper.toResponseDTO(atualizada);
+        return FichaTecnicaMapper.toResponseDTO(repository.save(ficha));
     }
-
     public void deletar(UUID id) {
+
+        if (id == null) {
+            throw new IllegalArgumentException("ID não pode ser nulo");
+        }
 
         FichaTecnicaEntity ficha = repository.findById(id)
                 .orElseThrow(() -> new FichaTecnicaNaoEncontradaException());

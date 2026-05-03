@@ -106,4 +106,15 @@ public class AlertaServiceTest {
 
         verify(repository, never()).deleteById(id);
     }
+
+    @Test
+    void deveMapearAlertasParaDTO() {
+        AlertaEntity entity = new AlertaEntity();
+
+        when(repository.findAll()).thenReturn(List.of(entity));
+
+        List<AlertaResponseDTO> lista = service.listar();
+
+        assertEquals(1, lista.size());
+    }
 }

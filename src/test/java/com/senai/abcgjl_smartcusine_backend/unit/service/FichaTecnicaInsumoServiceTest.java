@@ -29,7 +29,8 @@ public class FichaTecnicaInsumoServiceTest {
     private FichaTecnicaInsumoService service;
 
     @Mock
-    private InsumoRepository insumoRepository;
+    private InsumoRepository InsumoRepository;
+
 
     @InjectMocks
     private FichaTecnicaInsumoService fichaTecnicaInsumoService;
@@ -299,20 +300,24 @@ public class FichaTecnicaInsumoServiceTest {
     @Test
     void deveFalharQuandoInsumoNaoPossuiNome() {
         UUID fichaId = UUID.randomUUID();
-
         UUID insumoId = UUID.randomUUID();
 
         InsumoEntity insumo = new InsumoEntity();
-        insumo.setNome(null);  // Insumo sem nome
+        insumo.setNome(null);
+
+        FichaTecnicaEntity ficha = new FichaTecnicaEntity();
+
+        when(relacaoRepository.existsByFichaTecnicaIdAndInsumoId(fichaId, insumoId))
+                .thenReturn(false);
+
+        when(fichaRepository.findById(fichaId))
+                .thenReturn(Optional.of(ficha));
 
         when(insumoRepository.findById(insumoId))
                 .thenReturn(Optional.of(insumo));
 
         assertThrows(RuntimeException.class, () -> {
             service.adicionarInsumo(fichaId, insumoId, 10.0);
-
-            verify(insumoRepository).findById(insumoId);
-
         });
 
         verify(insumoRepository).findById(insumoId);

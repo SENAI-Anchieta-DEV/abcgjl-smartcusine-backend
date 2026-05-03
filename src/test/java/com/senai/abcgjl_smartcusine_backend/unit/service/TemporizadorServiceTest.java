@@ -216,4 +216,50 @@ public class TemporizadorServiceTest {
         verify(temporizadorRepository).findById(id);
         verify(temporizadorRepository).delete(temporizador);
     }
+    @Test
+    void deveFalharQuandoDtoForNuloNaCriacao() {
+        assertThrows(NullPointerException.class, () -> {
+            service.criar(null);
+        });
+
+        verifyNoInteractions(temporizadorRepository, equipamentoRepository);
+    }
+    @Test
+    void deveFalharQuandoEquipamentoIdForNulo() {
+        TemporizadorDTO dto = new TemporizadorDTO(null, 100, 50, null);
+
+        when(equipamentoRepository.findById(null))
+                .thenReturn(Optional.empty());
+
+        assertThrows(EquipamentoNaoEncontradoException.class, () -> {
+            service.criar(dto);
+        });
+
+        verifyNoInteractions(temporizadorRepository);
+    }
+    @Test
+    void deveFalharAoAtualizarComDtoNulo() {
+        UUID id = UUID.randomUUID();
+
+        when(temporizadorRepository.findById(id))
+                .thenReturn(Optional.of(new TemporizadorEntity()));
+
+        assertThrows(NullPointerException.class, () -> {
+            service.atualizar(id, null);
+        });
+    }
+    @Test
+    void deveFalharAoAtualizarComIdNulo() {
+        TemporizadorDTO dto = new TemporizadorDTO(null, 100, 50, UUID.randomUUID());
+
+        assertThrows(TemporizadorNaoEncontradoException.class, () -> {
+            service.atualizar(null, dto);
+        });
+    }
+    @Test
+    void deveFalharAoDeletarComIdNulo() {
+        assertThrows(TemporizadorNaoEncontradoException.class, () -> {
+            service.deletar(null);
+        });
+    }
 }

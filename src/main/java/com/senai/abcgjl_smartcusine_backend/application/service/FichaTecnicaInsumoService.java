@@ -33,6 +33,10 @@ public class FichaTecnicaInsumoService {
     }
 
     public FichaTecnicaInsumoResponseDTO adicionarInsumo(UUID idFicha, UUID idInsumo, Double quantidade){
+        if (idFicha == null || idInsumo == null) {
+            throw new IllegalArgumentException("IDs não podem ser nulos");
+        }
+
         if (quantidade == null || quantidade <= 0) {
             throw new IllegalArgumentException("A quantidade deve ser maior que zero");
         }
