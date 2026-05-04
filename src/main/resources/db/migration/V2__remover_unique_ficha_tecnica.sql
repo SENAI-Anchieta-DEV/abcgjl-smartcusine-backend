@@ -1,0 +1,2 @@
+ALTER TABLE equipamentos
+DROP CONSTRAINT IF EXISTS equipamentos_ficha_tecnica_id_key;
