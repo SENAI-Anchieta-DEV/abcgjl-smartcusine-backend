@@ -12,22 +12,23 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
-
 public class AlertaEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id_alerta")
     private UUID idAlerta;
 
     private String tipo;
     private String mensagem;
 
     @ManyToOne
+    @JoinColumn(name = "equipamento_id")
     private EquipamentoEntity equipamento;
 
     @ManyToOne
+    @JoinColumn(name = "temporizador_id")
     private TemporizadorEntity temporizador;
-
 
     public void emitirAlerta() {}
 }
