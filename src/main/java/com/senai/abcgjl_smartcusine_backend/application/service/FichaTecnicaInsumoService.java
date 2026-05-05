@@ -6,10 +6,9 @@ import com.senai.abcgjl_smartcusine_backend.application.mapper.FichaTecnicaInsum
 import com.senai.abcgjl_smartcusine_backend.domain.entity.FichaTecnicaEntity;
 import com.senai.abcgjl_smartcusine_backend.domain.entity.FichaTecnicaInsumoEntity;
 import com.senai.abcgjl_smartcusine_backend.domain.entity.InsumoEntity;
-import com.senai.abcgjl_smartcusine_backend.domain.repository.FichaTecnicaInsumoRepository;
-import com.senai.abcgjl_smartcusine_backend.domain.repository.FichaTecnicaRepository;
-import com.senai.abcgjl_smartcusine_backend.domain.repository.InsumoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.senai.abcgjl_smartcusine_backend.domain.FichaTecnicaInsumoRepository;
+import com.senai.abcgjl_smartcusine_backend.domain.FichaTecnicaRepository;
+import com.senai.abcgjl_smartcusine_backend.domain.InsumoRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

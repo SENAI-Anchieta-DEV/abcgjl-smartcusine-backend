@@ -5,7 +5,7 @@ import com.senai.abcgjl_smartcusine_backend.application.dto.FichaTecnicaResponse
 import com.senai.abcgjl_smartcusine_backend.application.mapper.FichaTecnicaMapper;
 import com.senai.abcgjl_smartcusine_backend.domain.entity.FichaTecnicaEntity;
 import com.senai.abcgjl_smartcusine_backend.domain.exception.FichaTecnicaNaoEncontradaException;
-import com.senai.abcgjl_smartcusine_backend.domain.repository.FichaTecnicaRepository;
+import com.senai.abcgjl_smartcusine_backend.domain.FichaTecnicaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -5,9 +5,8 @@ import com.senai.abcgjl_smartcusine_backend.domain.entity.EquipamentoEntity;
 import com.senai.abcgjl_smartcusine_backend.domain.entity.TemporizadorEntity;
 import com.senai.abcgjl_smartcusine_backend.domain.exception.EquipamentoNaoEncontradoException;
 import com.senai.abcgjl_smartcusine_backend.domain.exception.TemporizadorNaoEncontradoException;
-import com.senai.abcgjl_smartcusine_backend.domain.repository.EquipamentoRepository;
-import com.senai.abcgjl_smartcusine_backend.domain.repository.TemporizadorRepository;
-import jakarta.persistence.EntityNotFoundException;
+import com.senai.abcgjl_smartcusine_backend.domain.EquipamentoRepository;
+import com.senai.abcgjl_smartcusine_backend.domain.TemporizadorRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
