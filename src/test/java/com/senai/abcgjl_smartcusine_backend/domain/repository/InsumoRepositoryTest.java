@@ -1,5 +1,5 @@
 package com.senai.abcgjl_smartcusine_backend.domain.repository;
-
+import org.springframework.test.context.ActiveProfiles;
 import com.senai.abcgjl_smartcusine_backend.domain.InsumoRepository;
 import com.senai.abcgjl_smartcusine_backend.domain.entity.InsumoEntity;
 import org.junit.jupiter.api.Test;
@@ -12,7 +12,9 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
+@ActiveProfiles("test")
 class InsumoRepositoryTest {
+
 
     @Autowired
     private InsumoRepository insumoRepository;
