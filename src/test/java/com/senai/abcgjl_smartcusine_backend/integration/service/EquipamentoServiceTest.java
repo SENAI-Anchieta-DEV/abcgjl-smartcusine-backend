@@ -1,8 +1,14 @@
-/*package com.senai.abcgjl_smartcusine_backend;
+package com.senai.abcgjl_smartcusine_backend.integration.service;
 
+import com.senai.abcgjl_smartcusine_backend.application.mapper.EquipamentoMapper;
 import com.senai.abcgjl_smartcusine_backend.application.service.EquipamentoService;
 import com.senai.abcgjl_smartcusine_backend.domain.entity.EquipamentoEntity;
 import com.senai.abcgjl_smartcusine_backend.domain.repository.EquipamentoRepository;
+import com.senai.abcgjl_smartcusine_backend.application.dto.EquipamentoRequestDTO;
+import com.senai.abcgjl_smartcusine_backend.application.dto.EquipamentoResponseDTO;
+import com.senai.abcgjl_smartcusine_backend.domain.entity.FichaTecnicaEntity;
+import com.senai.abcgjl_smartcusine_backend.domain.repository.FichaTecnicaRepository;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -14,26 +20,45 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class EquipamentoServiceTest {
+
     private EquipamentoRepository repository;
+    private FichaTecnicaRepository fichaTecnicaRepository;
     private EquipamentoService service;
 
     @BeforeEach
     void setup() {
         repository = mock(EquipamentoRepository.class);
-        service = new EquipamentoService(repository);
+
+        fichaTecnicaRepository = mock(FichaTecnicaRepository.class);
+
+        service = new EquipamentoService(repository,
+                fichaTecnicaRepository
+        );
+
     }
 
     // ✅ CRIAR
     @Test
     void deveCriarEquipamento() {
-        EquipamentoEntity equipamento = new EquipamentoEntity();
+        EquipamentoRequestDTO dto = mock(EquipamentoRequestDTO.class);
 
-        when(repository.save(equipamento)).thenReturn(equipamento);
+        FichaTecnicaEntity ficha = new FichaTecnicaEntity();
 
-        EquipamentoEntity result = service.criar(equipamento);
+        EquipamentoEntity entity = new EquipamentoEntity();
+
+        UUID fichaId = UUID.randomUUID();
+
+        when(dto.fichaTecnicaId()).thenReturn(fichaId);
+
+        when(fichaTecnicaRepository.findById(fichaId))
+                .thenReturn(Optional.of(ficha));
+
+        when(repository.save(any()))
+                .thenReturn(entity);
+
+        EquipamentoResponseDTO result = service.criar(dto);
 
         assertNotNull(result);
-        verify(repository).save(equipamento);
     }
 
     // ✅ LISTAR
@@ -43,7 +68,7 @@ public class EquipamentoServiceTest {
 
         when(repository.findAll()).thenReturn(List.of(equipamento));
 
-        List<EquipamentoEntity> lista = service.listar();
+        List<EquipamentoResponseDTO> lista = service.listar();
 
         assertFalse(lista.isEmpty());
     }
@@ -71,7 +96,7 @@ public class EquipamentoServiceTest {
 
         when(repository.findById(id)).thenReturn(Optional.of(equipamento));
 
-        EquipamentoEntity result = service.buscarPorId(id);
+        EquipamentoResponseDTO result = service.buscarPorId(id);
 
         assertNotNull(result);
     }
@@ -80,12 +105,12 @@ public class EquipamentoServiceTest {
     @Test
     void deveFalharAoAtualizarQuandoNaoExiste() {
         UUID id = UUID.randomUUID();
-        EquipamentoEntity novo = new EquipamentoEntity();
+        EquipamentoRequestDTO dto = mock(EquipamentoRequestDTO.class);
 
         when(repository.findById(id)).thenReturn(Optional.empty());
 
         assertThrows(RuntimeException.class, () -> {
-            service.atualizar(id, novo);
+            service.atualizar(id, dto);
         });
     }
 
@@ -93,16 +118,24 @@ public class EquipamentoServiceTest {
     @Test
     void deveAtualizarEquipamento() {
         UUID id = UUID.randomUUID();
+        UUID fichaId = UUID.randomUUID();
 
+        EquipamentoRequestDTO dto = mock(EquipamentoRequestDTO.class);
         EquipamentoEntity existente = new EquipamentoEntity();
-        EquipamentoEntity novo = new EquipamentoEntity();
+        FichaTecnicaEntity ficha = new FichaTecnicaEntity();
 
         when(repository.findById(id)).thenReturn(Optional.of(existente));
+        when(fichaTecnicaRepository.findById(fichaId)).thenReturn(Optional.of(ficha));
+        when(dto.fichaTecnicaId()).thenReturn(fichaId);
+        when(dto.tipo()).thenReturn("Geladeira");
+        when(dto.temperaturaAtual()).thenReturn(4.0);
+        when(dto.temperaturaIdeal()).thenReturn(2.0);
         when(repository.save(any())).thenReturn(existente);
 
-        EquipamentoEntity result = service.atualizar(id, novo);
+        EquipamentoResponseDTO result = service.atualizar(id, dto);
 
         assertNotNull(result);
+
         verify(repository).save(existente);
     }
 
@@ -130,4 +163,4 @@ public class EquipamentoServiceTest {
         assertDoesNotThrow(() -> service.deletar(id));
         verify(repository).delete(equipamento);
     }
-}*/
+}

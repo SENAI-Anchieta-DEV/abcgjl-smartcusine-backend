@@ -3,7 +3,7 @@ package com.senai.abcgjl_smartcusine_backend.application.service;
 import com.senai.abcgjl_smartcusine_backend.application.dto.AlertaResponseDTO;
 import com.senai.abcgjl_smartcusine_backend.application.mapper.AlertaMapper;
 import com.senai.abcgjl_smartcusine_backend.domain.exception.AlertaNaoEncontradoException;
-import com.senai.abcgjl_smartcusine_backend.domain.AlertaRepository;
+import com.senai.abcgjl_smartcusine_backend.domain.repository.AlertaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

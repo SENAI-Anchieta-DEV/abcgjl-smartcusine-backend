@@ -7,8 +7,8 @@ import com.senai.abcgjl_smartcusine_backend.domain.entity.EquipamentoEntity;
 import com.senai.abcgjl_smartcusine_backend.domain.entity.FichaTecnicaEntity;
 import com.senai.abcgjl_smartcusine_backend.domain.exception.EquipamentoNaoEncontradoException;
 import com.senai.abcgjl_smartcusine_backend.domain.exception.FichaTecnicaNaoEncontradaException;
-import com.senai.abcgjl_smartcusine_backend.domain.EquipamentoRepository;
-import com.senai.abcgjl_smartcusine_backend.domain.FichaTecnicaRepository;
+import com.senai.abcgjl_smartcusine_backend.domain.repository.EquipamentoRepository;
+import com.senai.abcgjl_smartcusine_backend.domain.repository.FichaTecnicaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

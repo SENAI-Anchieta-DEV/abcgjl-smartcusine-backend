@@ -1,6 +1,5 @@
 package com.senai.abcgjl_smartcusine_backend.domain.repository;
 import org.springframework.test.context.ActiveProfiles;
-import com.senai.abcgjl_smartcusine_backend.domain.InsumoRepository;
 import com.senai.abcgjl_smartcusine_backend.domain.entity.InsumoEntity;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -7,7 +7,7 @@ import com.senai.abcgjl_smartcusine_backend.domain.entity.UsuarioEntity;
 import com.senai.abcgjl_smartcusine_backend.domain.enums.TipoUsuario;
 import com.senai.abcgjl_smartcusine_backend.domain.exception.EmailJaCadastradoException;
 import com.senai.abcgjl_smartcusine_backend.domain.exception.UsuarioNaoEncontradoException;
-import com.senai.abcgjl_smartcusine_backend.domain.UsuarioRepository;
+import com.senai.abcgjl_smartcusine_backend.domain.repository.UsuarioRepository;
 import com.senai.abcgjl_smartcusine_backend.interfaces.exception.AcessoNegadoException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

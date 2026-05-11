@@ -1,6 +1,6 @@
 package com.senai.abcgjl_smartcusine_backend.infrastructure.security;
 
-import com.senai.abcgjl_smartcusine_backend.domain.UsuarioRepository;
+import com.senai.abcgjl_smartcusine_backend.domain.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;

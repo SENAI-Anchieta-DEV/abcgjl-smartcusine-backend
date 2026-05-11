@@ -1,6 +1,5 @@
 package com.senai.abcgjl_smartcusine_backend.domain.repository;
 
-import com.senai.abcgjl_smartcusine_backend.domain.FichaTecnicaRepository;
 import com.senai.abcgjl_smartcusine_backend.domain.entity.FichaTecnicaEntity;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

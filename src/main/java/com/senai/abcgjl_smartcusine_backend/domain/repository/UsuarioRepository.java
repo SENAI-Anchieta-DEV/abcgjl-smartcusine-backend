@@ -1,4 +1,4 @@
-package com.senai.abcgjl_smartcusine_backend.domain;
+package com.senai.abcgjl_smartcusine_backend.domain.repository;
 
 import com.senai.abcgjl_smartcusine_backend.domain.entity.UsuarioEntity;
 import java.util.Optional;

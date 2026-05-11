@@ -1,6 +1,5 @@
 package com.senai.abcgjl_smartcusine_backend.domain.repository;
 
-import com.senai.abcgjl_smartcusine_backend.domain.UsuarioRepository;
 import com.senai.abcgjl_smartcusine_backend.domain.enums.TipoUsuario;
 import com.senai.abcgjl_smartcusine_backend.domain.entity.UsuarioEntity;
 import org.junit.jupiter.api.Test;

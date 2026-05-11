@@ -1,6 +1,5 @@
 package com.senai.abcgjl_smartcusine_backend.domain.repository;
 
-import com.senai.abcgjl_smartcusine_backend.domain.TemporizadorRepository;
 import com.senai.abcgjl_smartcusine_backend.domain.entity.TemporizadorEntity;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

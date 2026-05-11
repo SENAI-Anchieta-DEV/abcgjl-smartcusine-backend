@@ -1,6 +1,5 @@
 package com.senai.abcgjl_smartcusine_backend.domain.repository;
 
-import com.senai.abcgjl_smartcusine_backend.domain.AlertaRepository;
 import com.senai.abcgjl_smartcusine_backend.domain.entity.AlertaEntity;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

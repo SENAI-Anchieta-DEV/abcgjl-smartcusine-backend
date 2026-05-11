@@ -5,7 +5,7 @@ import com.senai.abcgjl_smartcusine_backend.application.dto.InsumoResponseDTO;
 import com.senai.abcgjl_smartcusine_backend.application.mapper.InsumoMapper;
 import com.senai.abcgjl_smartcusine_backend.domain.entity.InsumoEntity;
 import com.senai.abcgjl_smartcusine_backend.domain.exception.InsumoNaoEncontradoException;
-import com.senai.abcgjl_smartcusine_backend.domain.InsumoRepository;
+import com.senai.abcgjl_smartcusine_backend.domain.repository.InsumoRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

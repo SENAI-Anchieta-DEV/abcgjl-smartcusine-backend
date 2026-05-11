@@ -1,8 +1,5 @@
 package com.senai.abcgjl_smartcusine_backend.domain.repository;
 
-import com.senai.abcgjl_smartcusine_backend.domain.FichaTecnicaInsumoRepository;
-import com.senai.abcgjl_smartcusine_backend.domain.FichaTecnicaRepository;
-import com.senai.abcgjl_smartcusine_backend.domain.InsumoRepository;
 import com.senai.abcgjl_smartcusine_backend.domain.entity.FichaTecnicaEntity;
 import com.senai.abcgjl_smartcusine_backend.domain.entity.FichaTecnicaInsumoEntity;
 import com.senai.abcgjl_smartcusine_backend.domain.entity.InsumoEntity;
