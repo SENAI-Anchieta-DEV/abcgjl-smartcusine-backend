@@ -3,7 +3,6 @@ package com.senai.abcgjl_smartcusine_backend.integration.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.senai.abcgjl_smartcusine_backend.application.dto.AuthDTO.LoginRequest;
 import com.senai.abcgjl_smartcusine_backend.domain.entity.UsuarioEntity;
-import com.senai.abcgjl_smartcusine_backend.domain.entity.UsuarioEntity;
 import com.senai.abcgjl_smartcusine_backend.domain.enums.TipoUsuario;
 import com.senai.abcgjl_smartcusine_backend.domain.repository.UsuarioRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,16 +13,18 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@ActiveProfiles("test")
+@SpringBootTest(properties = {
+        "spring.flyway.enabled=false",
+        "security.jwt.secret=minhachavesecretamuitograndeecommaisde32caracteres123456789",
+        "security.jwt.expiration=3600"
+})
+@AutoConfigureMockMvc(addFilters = false)
 class AuthControllerTest {
 
     @Autowired

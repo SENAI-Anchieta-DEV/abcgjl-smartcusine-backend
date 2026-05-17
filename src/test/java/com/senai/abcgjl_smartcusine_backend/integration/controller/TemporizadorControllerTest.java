@@ -11,7 +11,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.UUID;
@@ -19,11 +18,14 @@ import java.util.UUID;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@ActiveProfiles("test")
+@SpringBootTest(properties = {
+        "spring.flyway.enabled=false",
+        "security.jwt.secret=minhachavesecretamuitograndeecommaisde32caracteres123456789",
+        "security.jwt.expiration=3600"
+})
+@AutoConfigureMockMvc(addFilters = false)
 @WithMockUser
-public class TemporizadorControllerTest {
+class TemporizadorControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -71,5 +73,37 @@ public class TemporizadorControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.tempoConfigurado").value(30))
                 .andExpect(jsonPath("$.tempoAtual").value(15));
+    }
+
+    @Test
+    void naoDeveCadastrarTemporizadorComTempoNegativo() throws Exception {
+
+        TemporizadorDTO dto = new TemporizadorDTO(
+                null,
+                -30,
+                15,
+                equipamentoId
+        );
+
+        mockMvc.perform(post("/temporizadores")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(dto)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void naoDeveCadastrarTemporizadorComEquipamentoInexistente() throws Exception {
+
+        TemporizadorDTO dto = new TemporizadorDTO(
+                null,
+                30,
+                15,
+                UUID.fromString("550e8400-e29b-41d4-a716-446655440000")
+        );
+
+        mockMvc.perform(post("/temporizadores")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(dto)))
+                .andExpect(status().isNotFound());
     }
 }

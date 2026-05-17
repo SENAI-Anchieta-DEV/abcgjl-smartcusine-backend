@@ -12,15 +12,18 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@ActiveProfiles("test")
+@SpringBootTest(properties = {
+        "spring.flyway.enabled=false",
+        "security.jwt.secret=minhachavesecretamuitograndeecommaisde32caracteres123456789",
+        "security.jwt.expiration=3600"
+})
+@AutoConfigureMockMvc(addFilters = false)
 class UsuarioControllerTest {
 
     @Autowired
@@ -32,19 +35,21 @@ class UsuarioControllerTest {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    private UsuarioEntity usuario;
+
     @BeforeEach
     void setup() {
 
         usuarioRepository.deleteAll();
 
-        UsuarioEntity usuario = new UsuarioEntity();
+        usuario = new UsuarioEntity();
 
         usuario.setNome("Administrador");
         usuario.setEmail("admin@email.com");
         usuario.setSenha("123456");
         usuario.setTipo(TipoUsuario.ADMIN);
 
-        usuarioRepository.save(usuario);
+        usuario = usuarioRepository.save(usuario);
     }
 
     @Test
@@ -57,5 +62,17 @@ class UsuarioControllerTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    @DisplayName("Deve retornar 404 ao deletar usuário inexistente")
+    void deveRetornar404AoDeletarUsuarioInexistente() throws Exception {
+
+        mockMvc.perform(
+                        delete("/usuarios/{id}", 999999L)
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isNotFound());
     }
 }
