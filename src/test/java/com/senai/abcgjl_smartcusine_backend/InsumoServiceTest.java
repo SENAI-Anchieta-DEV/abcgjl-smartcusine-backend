@@ -1,4 +1,4 @@
-/*package com.senai.abcgjl_smartcusine_backend;
+package com.senai.abcgjl_smartcusine_backend;
 
 
 import com.senai.abcgjl_smartcusine_backend.application.dto.InsumoRequestDTO;
@@ -172,4 +172,4 @@ public class InsumoServiceTest {
         verify(repository).delete(entity);
     }
 
-}*/
+}

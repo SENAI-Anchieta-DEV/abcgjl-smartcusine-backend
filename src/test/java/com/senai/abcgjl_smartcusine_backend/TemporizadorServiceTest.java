@@ -1,4 +1,4 @@
-/*package com.senai.abcgjl_smartcusine_backend;
+package com.senai.abcgjl_smartcusine_backend;
 
 import com.senai.abcgjl_smartcusine_backend.application.dto.TemporizadorDTO;
 import com.senai.abcgjl_smartcusine_backend.application.service.TemporizadorService;
@@ -179,4 +179,4 @@ public class TemporizadorServiceTest {
         assertDoesNotThrow(() -> service.deletar(id));
         verify(temporizadorRepository).delete(temporizador);
     }
-}*/
+}
