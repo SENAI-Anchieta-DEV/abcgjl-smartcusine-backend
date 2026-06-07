@@ -1,4 +1,4 @@
-/*package com.senai.abcgjl_smartcusine_backend;
+package com.senai.abcgjl_smartcusine_backend;
 
 import com.senai.abcgjl_smartcusine_backend.application.dto.FichaTecnicaRequestDTO;
 import com.senai.abcgjl_smartcusine_backend.application.dto.FichaTecnicaResponseDTO;
@@ -148,4 +148,4 @@ public class FichaTecnicaServiceTest {
         assertDoesNotThrow(() -> service.deletar(id));
         verify(repository).delete(ficha);
     }
-}*/
+}

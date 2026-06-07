@@ -1,4 +1,4 @@
-/*package com.senai.abcgjl_smartcusine_backend;
+package com.senai.abcgjl_smartcusine_backend;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,4 +10,4 @@ class AbcgjlSmartcusineBackendApplicationTests {
 	void contextLoads() {
 	}
 
-}*/
+}

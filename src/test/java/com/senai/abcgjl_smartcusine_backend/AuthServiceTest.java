@@ -1,4 +1,4 @@
-/*package com.senai.abcgjl_smartcusine_backend;
+package com.senai.abcgjl_smartcusine_backend;
 import com.senai.abcgjl_smartcusine_backend.application.dto.AuthDTO;
 import com.senai.abcgjl_smartcusine_backend.application.service.AuthService;
 import com.senai.abcgjl_smartcusine_backend.domain.entity.UsuarioEntity;
@@ -90,4 +90,4 @@ public class AuthServiceTest {
         assertNotNull(token);
         assertEquals("token-jwt", token);
     }
-}*/
+}
